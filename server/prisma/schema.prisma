@@ -1,0 +1,190 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  AGENT
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  DISABLED
+  DELETED
+}
+
+enum TicketStatus {
+  OPEN
+  PENDING
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum TicketMessageSenderRole {
+  USER
+  AGENT
+  SYSTEM
+}
+
+enum TicketMessageType {
+  TEXT
+  IMAGE
+  SYSTEM
+}
+
+enum AttachmentStatus {
+  ACTIVE
+  DELETED
+}
+
+model User {
+  id               String          @id @default(uuid()) @db.Uuid
+  email            String?         @unique @db.VarChar(255)
+  phone            String?         @unique @db.VarChar(32)
+  passwordHash     String          @map("password_hash") @db.VarChar(255)
+  displayName      String          @map("display_name") @db.VarChar(120)
+  avatarUrl        String?         @map("avatar_url") @db.Text
+  role             UserRole        @default(USER)
+  status           UserStatus      @default(ACTIVE)
+  lastLoginAt      DateTime?       @map("last_login_at")
+  deletedAt        DateTime?       @map("deleted_at")
+  createdAt        DateTime        @default(now()) @map("created_at")
+  updatedAt        DateTime        @updatedAt @map("updated_at")
+  sessions         UserSession[]
+  tickets          Ticket[]        @relation("TicketOwner")
+  assignedTickets  Ticket[]        @relation("AssignedAgent")
+  ticketMessages   TicketMessage[]
+  ticketAttachments TicketAttachment[]
+
+  @@index([role])
+  @@index([status])
+  @@map("users")
+}
+
+model UserSession {
+  id               String    @id @default(uuid()) @db.Uuid
+  userId           String    @map("user_id") @db.Uuid
+  refreshTokenHash String    @map("refresh_token_hash") @db.VarChar(255)
+  deviceId         String?   @map("device_id") @db.VarChar(255)
+  deviceName       String?   @map("device_name") @db.VarChar(255)
+  platform         String?   @db.VarChar(32)
+  expiresAt        DateTime  @map("expires_at")
+  revokedAt        DateTime? @map("revoked_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("user_sessions")
+}
+
+model FaqCategory {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String   @db.VarChar(120)
+  sortOrder Int      @default(0) @map("sort_order")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  faqs      Faq[]
+
+  @@map("faq_categories")
+}
+
+model Faq {
+  id         String      @id @default(uuid()) @db.Uuid
+  categoryId String      @map("category_id") @db.Uuid
+  question   String      @db.VarChar(255)
+  answer     String      @db.Text
+  keywords   String[]
+  viewCount  Int         @default(0) @map("view_count")
+  isActive   Boolean     @default(true) @map("is_active")
+  sortOrder  Int         @default(0) @map("sort_order")
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @updatedAt @map("updated_at")
+  category   FaqCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  @@index([categoryId])
+  @@index([isActive])
+  @@map("faqs")
+}
+
+model Ticket {
+  id              String             @id @default(uuid()) @db.Uuid
+  ticketNo        String             @unique @map("ticket_no") @db.VarChar(64)
+  userId          String             @map("user_id") @db.Uuid
+  assignedAgentId String?            @map("assigned_agent_id") @db.Uuid
+  subject         String             @db.VarChar(255)
+  description     String             @db.Text
+  category        String             @db.VarChar(80)
+  priority        TicketPriority     @default(NORMAL)
+  status          TicketStatus       @default(OPEN)
+  lastMessageAt   DateTime?          @map("last_message_at")
+  resolvedAt      DateTime?          @map("resolved_at")
+  closedAt        DateTime?          @map("closed_at")
+  createdAt       DateTime           @default(now()) @map("created_at")
+  updatedAt       DateTime           @updatedAt @map("updated_at")
+  user            User               @relation("TicketOwner", fields: [userId], references: [id], onDelete: Cascade)
+  assignedAgent   User?              @relation("AssignedAgent", fields: [assignedAgentId], references: [id], onDelete: SetNull)
+  messages        TicketMessage[]
+  attachments     TicketAttachment[]
+
+  @@index([userId, status])
+  @@index([assignedAgentId, status])
+  @@index([lastMessageAt])
+  @@map("tickets")
+}
+
+model TicketMessage {
+  id         String                  @id @default(uuid()) @db.Uuid
+  ticketId   String                  @map("ticket_id") @db.Uuid
+  senderId   String?                 @map("sender_id") @db.Uuid
+  senderRole TicketMessageSenderRole @map("sender_role")
+  type       TicketMessageType       @default(TEXT)
+  body       String                  @db.Text
+  isInternal Boolean                 @default(false) @map("is_internal")
+  createdAt  DateTime                @default(now()) @map("created_at")
+  deletedAt  DateTime?               @map("deleted_at")
+  ticket     Ticket                  @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  sender     User?                   @relation(fields: [senderId], references: [id], onDelete: SetNull)
+  attachments TicketAttachment[]
+
+  @@index([ticketId, createdAt])
+  @@index([senderId])
+  @@map("ticket_messages")
+}
+
+model TicketAttachment {
+  id         String           @id @default(uuid()) @db.Uuid
+  ticketId   String           @map("ticket_id") @db.Uuid
+  messageId  String?          @map("message_id") @db.Uuid
+  uploaderId String           @map("uploader_id") @db.Uuid
+  fileKey    String           @map("file_key") @db.VarChar(255)
+  fileName   String           @map("file_name") @db.VarChar(255)
+  mimeType   String           @map("mime_type") @db.VarChar(120)
+  fileSize   Int              @map("file_size")
+  status     AttachmentStatus @default(ACTIVE)
+  createdAt  DateTime         @default(now()) @map("created_at")
+  deletedAt  DateTime?        @map("deleted_at")
+  ticket     Ticket           @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  message    TicketMessage?   @relation(fields: [messageId], references: [id], onDelete: SetNull)
+  uploader   User             @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId])
+  @@index([messageId])
+  @@index([uploaderId])
+  @@map("ticket_attachments")
+}

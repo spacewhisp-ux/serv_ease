@@ -1,0 +1,19 @@
+import { IsOptional, IsString, MinLength } from 'class-validator';
+
+export class LoginDto {
+  @IsString()
+  @MinLength(3)
+  account!: string;
+
+  @IsString()
+  @MinLength(8)
+  password!: string;
+
+  @IsOptional()
+  @IsString()
+  deviceId?: string;
+
+  @IsOptional()
+  @IsString()
+  deviceName?: string;
+}
