@@ -6,6 +6,7 @@ import {
 import { TicketStatus } from '@prisma/client';
 
 import { AuthenticatedUser } from '../auth/authenticated-user.interface';
+import { NotificationsService } from '../notifications/notifications.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { AdminListTicketsDto } from './dto/admin-list-tickets.dto';
 import { AdminReplyTicketDto } from './dto/admin-reply-ticket.dto';
@@ -14,7 +15,10 @@ import { UpdateAdminTicketStatusDto } from './dto/update-admin-ticket-status.dto
 
 @Injectable()
 export class AdminService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notificationsService: NotificationsService,
+  ) {}
 
   async listTickets(user: AuthenticatedUser, query: AdminListTicketsDto) {
     this.assertAgent(user);
@@ -70,12 +74,19 @@ export class AdminService {
   async assignTicket(user: AuthenticatedUser, id: string, dto: AssignTicketDto) {
     this.assertAgent(user);
 
-    const ticket = await this.prisma.ticket.findUnique({ where: { id } });
+    const ticket = await this.prisma.ticket.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        ticketNo: true,
+        userId: true,
+      },
+    });
     if (!ticket) {
       throw new NotFoundException('Ticket not found');
     }
 
-    return this.prisma.ticket.update({
+    const updatedTicket = await this.prisma.ticket.update({
       where: { id },
       data: {
         assignedAgentId: dto.agentId,
@@ -88,12 +99,30 @@ export class AdminService {
         updatedAt: true,
       },
     });
+
+    await this.notificationsService.createNotification({
+      userId: ticket.userId,
+      type: 'TICKET_UPDATED',
+      title: 'Ticket assigned',
+      body: `Your ticket ${ticket.ticketNo} is now being handled.`,
+      data: { ticketId: id, ticketNo: ticket.ticketNo },
+    });
+
+    return updatedTicket;
   }
 
   async replyTicket(user: AuthenticatedUser, id: string, dto: AdminReplyTicketDto) {
     this.assertAgent(user);
 
-    const ticket = await this.prisma.ticket.findUnique({ where: { id } });
+    const ticket = await this.prisma.ticket.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        ticketNo: true,
+        userId: true,
+        assignedAgentId: true,
+      },
+    });
     if (!ticket) {
       throw new NotFoundException('Ticket not found');
     }
@@ -124,6 +153,16 @@ export class AdminService {
       },
     });
 
+    if (!(dto.isInternal ?? false)) {
+      await this.notificationsService.createNotification({
+        userId: ticket.userId,
+        type: 'AGENT_REPLIED',
+        title: 'Support replied',
+        body: `There is a new reply on ${ticket.ticketNo}.`,
+        data: { ticketId: id, ticketNo: ticket.ticketNo },
+      });
+    }
+
     return message;
   }
 
@@ -134,12 +173,19 @@ export class AdminService {
   ) {
     this.assertAgent(user);
 
-    const ticket = await this.prisma.ticket.findUnique({ where: { id } });
+    const ticket = await this.prisma.ticket.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        ticketNo: true,
+        userId: true,
+      },
+    });
     if (!ticket) {
       throw new NotFoundException('Ticket not found');
     }
 
-    return this.prisma.ticket.update({
+    const updatedTicket = await this.prisma.ticket.update({
       where: { id },
       data: {
         status: dto.status,
@@ -154,6 +200,16 @@ export class AdminService {
         updatedAt: true,
       },
     });
+
+    await this.notificationsService.createNotification({
+      userId: ticket.userId,
+      type: 'TICKET_UPDATED',
+      title: 'Ticket status updated',
+      body: `Your ticket ${ticket.ticketNo} is now ${dto.status}.`,
+      data: { ticketId: id, ticketNo: ticket.ticketNo, status: dto.status },
+    });
+
+    return updatedTicket;
   }
 
   private assertAgent(user: AuthenticatedUser) {

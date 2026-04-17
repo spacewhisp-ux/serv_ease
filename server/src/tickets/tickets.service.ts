@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { TicketStatus } from '@prisma/client';
 
+import { NotificationsService } from '../notifications/notifications.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CloseTicketDto } from './dto/close-ticket.dto';
 import { CreateTicketDto } from './dto/create-ticket.dto';
@@ -9,7 +10,10 @@ import { ReplyTicketDto } from './dto/reply-ticket.dto';
 
 @Injectable()
 export class TicketsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notificationsService: NotificationsService,
+  ) {}
 
   async createTicket(userId: string, dto: CreateTicketDto) {
     const now = new Date();
@@ -143,7 +147,12 @@ export class TicketsService {
   async replyTicket(userId: string, id: string, dto: ReplyTicketDto) {
     const ticket = await this.prisma.ticket.findFirst({
       where: { id, userId },
-      select: { id: true, status: true },
+      select: {
+        id: true,
+        status: true,
+        ticketNo: true,
+        assignedAgentId: true,
+      },
     });
 
     if (!ticket) {
@@ -187,6 +196,16 @@ export class TicketsService {
       });
     }
 
+    if (ticket.assignedAgentId) {
+      await this.notificationsService.createNotification({
+        userId: ticket.assignedAgentId,
+        type: 'TICKET_UPDATED',
+        title: 'Ticket updated',
+        body: `User replied to ${ticket.ticketNo}.`,
+        data: { ticketId: id, ticketNo: ticket.ticketNo },
+      });
+    }
+
     return {
       messageId: message.id,
       ticketId: message.ticketId,
@@ -199,7 +218,10 @@ export class TicketsService {
   async closeTicket(userId: string, id: string, dto: CloseTicketDto) {
     const ticket = await this.prisma.ticket.findFirst({
       where: { id, userId },
-      select: { id: true },
+      select: {
+        id: true,
+        ticketNo: true,
+      },
     });
 
     if (!ticket) {
@@ -227,6 +249,14 @@ export class TicketsService {
         status: true,
         closedAt: true,
       },
+    });
+
+    await this.notificationsService.createNotification({
+      userId,
+      type: 'SYSTEM',
+      title: 'Ticket closed',
+      body: `Your ticket ${ticket.ticketNo} has been closed.`,
+      data: { ticketId: id, ticketNo: ticket.ticketNo },
     });
 
     return {
