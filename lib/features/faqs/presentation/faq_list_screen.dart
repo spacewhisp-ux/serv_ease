@@ -182,11 +182,35 @@ class FaqDetailScreen extends StatelessWidget {
       body: FutureBuilder<FaqDetail>(
         future: repository.fetchFaqDetail(faqId),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final faq = snapshot.data!;
+          if (snapshot.hasError) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: EmptyStateCard(
+                  title: 'Could not load FAQ',
+                  description: snapshot.error.toString(),
+                ),
+              ),
+            );
+          }
+
+          final faq = snapshot.data;
+          if (faq == null) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(24),
+                child: EmptyStateCard(
+                  title: 'FAQ not found',
+                  description: 'Please return to the list and try again.',
+                ),
+              ),
+            );
+          }
+
           return ListView(
             padding: const EdgeInsets.all(24),
             children: [

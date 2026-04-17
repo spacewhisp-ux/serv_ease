@@ -671,11 +671,14 @@ class _TicketPriorityOption {
 const _ticketStatuses = [
   _TicketStatusOption(label: 'All', value: 'ALL'),
   _TicketStatusOption(label: 'Open', value: 'OPEN'),
+  _TicketStatusOption(label: 'Pending', value: 'PENDING'),
   _TicketStatusOption(label: 'In progress', value: 'IN_PROGRESS'),
+  _TicketStatusOption(label: 'Resolved', value: 'RESOLVED'),
   _TicketStatusOption(label: 'Closed', value: 'CLOSED'),
 ];
 
 const _ticketPriorities = [
+  _TicketPriorityOption(label: 'Low', value: 'LOW'),
   _TicketPriorityOption(label: 'Normal', value: 'NORMAL'),
   _TicketPriorityOption(label: 'High', value: 'HIGH'),
   _TicketPriorityOption(label: 'Urgent', value: 'URGENT'),

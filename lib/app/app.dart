@@ -83,7 +83,7 @@ class _ServEaseAppState extends State<ServEaseApp> {
           BlocProvider(
             create: (_) => NotificationsCubit(
               notificationsRepository: _notificationsRepository,
-            ),
+            )..load(),
           ),
         ],
         child: MaterialApp(

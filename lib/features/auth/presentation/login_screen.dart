@@ -17,6 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _accountController = TextEditingController();
   final _passwordController = TextEditingController();
   final _displayNameController = TextEditingController();
+  String? _validationMessage;
 
   @override
   void dispose() {
@@ -26,11 +27,45 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  void _submit(LoginState state) {
+    final account = _accountController.text.trim();
+    final password = _passwordController.text;
+    final displayName = _displayNameController.text.trim();
+
+    String? message;
+    if (account.isEmpty) {
+      message = 'Enter your email or phone number.';
+    } else if (password.length < 8) {
+      message = 'Password must be at least 8 characters.';
+    } else if (state.isRegistering && displayName.length < 2) {
+      message = 'Display name must be at least 2 characters.';
+    } else if (state.isRegistering && !account.contains('@')) {
+      final phonePattern = RegExp(r'^\+?[0-9]{8,15}$');
+      if (!phonePattern.hasMatch(account)) {
+        message = 'Use a valid email or phone number in international format.';
+      }
+    }
+
+    setState(() => _validationMessage = message);
+    if (message != null) {
+      return;
+    }
+
+    context.read<LoginCubit>().submit(
+      account: account,
+      password: password,
+      displayName: displayName,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<LoginCubit, LoginState>(
       listener: (context, state) async {
         if (state.status == LoginStatus.success && state.user != null) {
+          if (mounted) {
+            setState(() => _validationMessage = null);
+          }
           await context.read<SessionCubit>().setAuthenticated(state.user!);
         }
       },
@@ -72,6 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           controller: _accountController,
                           decoration: const InputDecoration(
                             labelText: 'Email or phone',
+                            hintText: 'name@example.com or +8613812345678',
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -83,9 +119,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        if (state.errorMessage != null) ...[
+                        if (_validationMessage != null ||
+                            state.errorMessage != null) ...[
                           Text(
-                            state.errorMessage!,
+                            _validationMessage ?? state.errorMessage!,
                             style: const TextStyle(color: Colors.redAccent),
                           ),
                           const SizedBox(height: 12),
@@ -97,19 +134,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ? 'Create account'
                                 : 'Sign in',
                             isLoading: state.status == LoginStatus.submitting,
-                            onPressed: () {
-                              context.read<LoginCubit>().submit(
-                                account: _accountController.text.trim(),
-                                password: _passwordController.text,
-                                displayName: _displayNameController.text,
-                              );
-                            },
+                            onPressed: () => _submit(state),
                           ),
                         ),
                         const SizedBox(height: 12),
                         TextButton(
-                          onPressed: () =>
-                              context.read<LoginCubit>().toggleMode(),
+                          onPressed: () {
+                            setState(() => _validationMessage = null);
+                            context.read<LoginCubit>().toggleMode();
+                          },
                           child: Text(
                             state.isRegistering
                                 ? 'Already have an account? Sign in'
