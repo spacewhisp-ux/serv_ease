@@ -49,6 +49,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.19.1"
+  cue:
+    dependency: "direct main"
+    description:
+      name: cue
+      sha256: a8e959ea0d20e9c1c63ae9c4f721d9f5ecc89e49827d28fe119662b034130a10
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.1.4"
   cupertino_icons:
     dependency: "direct main"
     description:

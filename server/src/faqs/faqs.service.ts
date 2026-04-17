@@ -1,46 +1,124 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
+import { PrismaService } from '../prisma/prisma.service';
 import { ListFaqsDto } from './dto/list-faqs.dto';
 
 @Injectable()
 export class FaqsService {
-  listCategories() {
-    return [
-      {
-        id: 'placeholder-category-id',
-        name: 'Getting Started',
-        sortOrder: 1,
+  constructor(private readonly prisma: PrismaService) {}
+
+  async listCategories() {
+    return this.prisma.faqCategory.findMany({
+      where: { isActive: true },
+      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
+      select: {
+        id: true,
+        name: true,
+        sortOrder: true,
       },
-    ];
+    });
   }
 
-  listFaqs(query: ListFaqsDto) {
-    return {
-      items: [
-        {
-          id: 'placeholder-faq-id',
-          categoryId: query.categoryId ?? 'placeholder-category-id',
-          question: 'How do I create a support ticket?',
-          answerPreview: 'Go to the Tickets tab and submit your issue.',
-          viewCount: 0,
+  async listFaqs(query: ListFaqsDto) {
+    const page = query.page ?? 1;
+    const pageSize = query.pageSize ?? 20;
+    const skip = (page - 1) * pageSize;
+
+    const where = {
+      isActive: true,
+      ...(query.categoryId ? { categoryId: query.categoryId } : {}),
+      ...(query.keyword
+        ? {
+            OR: [
+              {
+                question: {
+                  contains: query.keyword,
+                  mode: 'insensitive' as const,
+                },
+              },
+              {
+                answer: {
+                  contains: query.keyword,
+                  mode: 'insensitive' as const,
+                },
+              },
+              {
+                keywords: {
+                  has: query.keyword,
+                },
+              },
+            ],
+          }
+        : {}),
+    };
+
+    const [items, total] = await Promise.all([
+      this.prisma.faq.findMany({
+        where,
+        orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
+        skip,
+        take: pageSize,
+        select: {
+          id: true,
+          categoryId: true,
+          question: true,
+          answer: true,
+          viewCount: true,
         },
-      ],
+      }),
+      this.prisma.faq.count({ where }),
+    ]);
+
+    return {
+      items: items.map((item) => ({
+        id: item.id,
+        categoryId: item.categoryId,
+        question: item.question,
+        answerPreview:
+          item.answer.length > 120 ? `${item.answer.slice(0, 117)}...` : item.answer,
+        viewCount: item.viewCount,
+      })),
       pagination: {
-        page: query.page ?? 1,
-        pageSize: query.pageSize ?? 20,
-        total: 1,
-        totalPages: 1,
+        page,
+        pageSize,
+        total,
+        totalPages: Math.ceil(total / pageSize),
       },
     };
   }
 
-  getFaq(id: string) {
+  async getFaq(id: string) {
+    const faq = await this.prisma.faq.findFirst({
+      where: {
+        id,
+        isActive: true,
+      },
+      select: {
+        id: true,
+        categoryId: true,
+        question: true,
+        answer: true,
+        keywords: true,
+        viewCount: true,
+      },
+    });
+
+    if (!faq) {
+      throw new NotFoundException('FAQ not found');
+    }
+
+    await this.prisma.faq.update({
+      where: { id },
+      data: {
+        viewCount: {
+          increment: 1,
+        },
+      },
+    });
+
     return {
-      id,
-      categoryId: 'placeholder-category-id',
-      question: 'How do I create a support ticket?',
-      answer: 'Go to the Tickets tab, tap create, and describe your issue.',
-      keywords: ['ticket', 'support'],
+      ...faq,
+      viewCount: faq.viewCount + 1,
     };
   }
 }
