@@ -74,7 +74,7 @@ yarn prisma:seed
 ## Health Check
 
 ```bash
-curl http://localhost:3000/v1/health
+curl http://localhost:3001/v1/health
 ```
 
 ## Implemented API Surface
