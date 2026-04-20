@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import '../../../app/app_theme.dart';
+import '../../../core/localization/app_localizations_x.dart';
 import '../../../core/widgets/empty_state_card.dart';
 import '../../../core/widgets/primary_pill_button.dart';
 import '../../../core/widgets/surface_card.dart';
+import '../../../l10n/app_localizations.dart';
 import '../data/ticket_repository.dart';
 import 'create_ticket_cubit.dart';
 import 'ticket_list_cubit.dart';
@@ -28,6 +30,8 @@ class _TicketListScreenState extends State<TicketListScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<TicketListCubit, TicketListState>(
       builder: (context, state) {
+        final l10n = context.l10n;
+        final statuses = _ticketStatuses(l10n);
         return SafeArea(
           top: false,
           child: RefreshIndicator(
@@ -38,19 +42,19 @@ class _TicketListScreenState extends State<TicketListScreen> {
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               children: [
                 Text(
-                  'Track every support request.',
+                  l10n.ticketHeadline,
                   style: Theme.of(context).textTheme.displaySmall,
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  'Create a ticket, follow replies, and close the case when it is resolved.',
+                  l10n.ticketDescription,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
                   child: PrimaryPillButton(
-                    label: 'New ticket',
+                    label: l10n.ticketNew,
                     onPressed: () async {
                       final created = await Navigator.of(context).push<bool>(
                         MaterialPageRoute(
@@ -68,9 +72,8 @@ class _TicketListScreenState extends State<TicketListScreen> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      for (final status in _ticketStatuses) ...[
-                        if (status != _ticketStatuses.first)
-                          const SizedBox(width: 8),
+                      for (final status in statuses) ...[
+                        if (status != statuses.first) const SizedBox(width: 8),
                         _StatusChip(
                           label: status.label,
                           selected: state.selectedStatus == status.value,
@@ -92,14 +95,13 @@ class _TicketListScreenState extends State<TicketListScreen> {
                   )
                 else if (state.status == TicketListStatus.failure)
                   EmptyStateCard(
-                    title: 'Could not load tickets',
-                    description: state.errorMessage ?? 'Please try again.',
+                    title: l10n.ticketLoadFailed,
+                    description: state.errorMessage ?? l10n.commonTryAgain,
                   )
                 else if (state.items.isEmpty)
-                  const EmptyStateCard(
-                    title: 'No tickets yet',
-                    description:
-                        'Create your first support ticket to get help.',
+                  EmptyStateCard(
+                    title: l10n.ticketEmptyTitle,
+                    description: l10n.ticketEmptyDescription,
                   )
                 else
                   ...state.items.map(
@@ -124,7 +126,9 @@ class _TicketCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formatter = DateFormat('MMM d, HH:mm');
+    final formatter = DateFormat.yMMMd(
+      Localizations.localeOf(context).toLanguageTag(),
+    ).add_Hm();
     return SurfaceCard(
       child: InkWell(
         borderRadius: BorderRadius.circular(18),
@@ -147,7 +151,7 @@ class _TicketCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
-                _Tag(label: ticket.statusLabel),
+                _Tag(label: _ticketStatusLabel(context, ticket.status)),
               ],
             ),
             const SizedBox(height: 8),
@@ -158,11 +162,15 @@ class _TicketCard extends StatelessWidget {
             const SizedBox(height: 8),
             Row(
               children: [
-                _MetaLabel(label: ticket.priorityLabel),
+                _MetaLabel(
+                  label: _ticketPriorityLabel(context, ticket.priority),
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'Updated ${formatter.format(ticket.lastMessageAt.toLocal())}',
+                    context.l10n.ticketUpdatedAt(
+                      formatter.format(ticket.lastMessageAt.toLocal()),
+                    ),
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
@@ -185,8 +193,8 @@ class CreateTicketScreen extends StatefulWidget {
 class _CreateTicketScreenState extends State<CreateTicketScreen> {
   final _subjectController = TextEditingController();
   final _descriptionController = TextEditingController();
-  String _category = _ticketCategories.first;
-  String _priority = _ticketPriorities.first.value;
+  String _category = 'Account';
+  String _priority = 'LOW';
 
   @override
   void dispose() {
@@ -205,8 +213,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         }
       },
       builder: (context, state) {
+        final l10n = context.l10n;
+        final categoryOptions = _ticketCategories(l10n);
+        final priorityOptions = _ticketPriorities(l10n);
         return Scaffold(
-          appBar: AppBar(title: const Text('Create ticket')),
+          appBar: AppBar(title: Text(l10n.ticketCreateTitle)),
           body: ListView(
             padding: const EdgeInsets.all(24),
             children: [
@@ -215,22 +226,24 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Describe the issue clearly.',
+                      l10n.ticketCreateHeadline,
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     const SizedBox(height: 16),
                     TextField(
                       controller: _subjectController,
-                      decoration: const InputDecoration(labelText: 'Subject'),
+                      decoration: InputDecoration(
+                        labelText: l10n.ticketSubject,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     DropdownButtonFormField<String>(
                       initialValue: _category,
-                      items: _ticketCategories
+                      items: categoryOptions
                           .map(
                             (category) => DropdownMenuItem(
-                              value: category,
-                              child: Text(category),
+                              value: category.value,
+                              child: Text(category.label),
                             ),
                           )
                           .toList(),
@@ -239,12 +252,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                           setState(() => _category = value);
                         }
                       },
-                      decoration: const InputDecoration(labelText: 'Category'),
+                      decoration: InputDecoration(
+                        labelText: l10n.ticketCategory,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     DropdownButtonFormField<String>(
                       initialValue: _priority,
-                      items: _ticketPriorities
+                      items: priorityOptions
                           .map(
                             (priority) => DropdownMenuItem(
                               value: priority.value,
@@ -257,15 +272,17 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                           setState(() => _priority = value);
                         }
                       },
-                      decoration: const InputDecoration(labelText: 'Priority'),
+                      decoration: InputDecoration(
+                        labelText: l10n.ticketPriority,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     TextField(
                       controller: _descriptionController,
                       minLines: 5,
                       maxLines: 8,
-                      decoration: const InputDecoration(
-                        labelText: 'What happened?',
+                      decoration: InputDecoration(
+                        labelText: l10n.ticketDescriptionLabel,
                         alignLabelWithHint: true,
                       ),
                     ),
@@ -278,7 +295,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     ],
                     const SizedBox(height: 20),
                     PrimaryPillButton(
-                      label: 'Submit ticket',
+                      label: l10n.ticketSubmit,
                       isLoading: state.status == CreateTicketStatus.submitting,
                       onPressed: () {
                         context.read<CreateTicketCubit>().submit(
@@ -383,9 +400,12 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final formatter = DateFormat('MMM d, yyyy HH:mm');
+    final formatter = DateFormat.yMMMd(
+      Localizations.localeOf(context).toLanguageTag(),
+    ).add_Hm();
+    final l10n = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: const Text('Ticket details')),
+      appBar: AppBar(title: Text(l10n.ticketDetailTitle)),
       body: FutureBuilder<TicketDetail>(
         future: _detailFuture,
         builder: (context, snapshot) {
@@ -398,7 +418,7 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(24),
                 child: EmptyStateCard(
-                  title: 'Could not load ticket',
+                  title: l10n.ticketDetailLoadFailed,
                   description: snapshot.error.toString(),
                 ),
               ),
@@ -407,13 +427,12 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
 
           final ticket = snapshot.data;
           if (ticket == null) {
-            return const Center(
+            return Center(
               child: Padding(
-                padding: EdgeInsets.all(24),
+                padding: const EdgeInsets.all(24),
                 child: EmptyStateCard(
-                  title: 'Ticket not found',
-                  description:
-                      'Please return to the ticket list and try again.',
+                  title: l10n.ticketNotFound,
+                  description: l10n.ticketNotFoundDescription,
                 ),
               ),
             );
@@ -439,12 +458,14 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
                             ),
                           ),
                           const SizedBox(width: 12),
-                          _Tag(label: ticket.statusLabel),
+                          _Tag(
+                            label: _ticketStatusLabel(context, ticket.status),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        '${ticket.ticketNo} • ${ticket.category}',
+                        '${ticket.ticketNo} • ${_ticketCategoryLabel(context, ticket.category)}',
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       const SizedBox(height: 12),
@@ -455,11 +476,18 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
                       const SizedBox(height: 16),
                       Row(
                         children: [
-                          _MetaLabel(label: ticket.priorityLabel),
+                          _MetaLabel(
+                            label: _ticketPriorityLabel(
+                              context,
+                              ticket.priority,
+                            ),
+                          ),
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
-                              'Opened ${formatter.format(ticket.createdAt.toLocal())}',
+                              l10n.ticketOpenedAt(
+                                formatter.format(ticket.createdAt.toLocal()),
+                              ),
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ),
@@ -468,7 +496,7 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
                       if (canReply) ...[
                         const SizedBox(height: 20),
                         PrimaryPillButton(
-                          label: 'Close ticket',
+                          label: l10n.ticketClose,
                           isLoading: _isClosingTicket,
                           onPressed: _closeTicket,
                         ),
@@ -478,7 +506,7 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Conversation',
+                  l10n.ticketConversation,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(height: 12),
@@ -495,7 +523,7 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Attachments',
+                          l10n.ticketAttachments,
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                         const SizedBox(height: 12),
@@ -518,7 +546,9 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        canReply ? 'Send a reply' : 'This ticket is closed',
+                        canReply
+                            ? l10n.ticketSendReply
+                            : l10n.ticketClosedState,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       const SizedBox(height: 12),
@@ -527,14 +557,14 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
                         minLines: 4,
                         maxLines: 6,
                         enabled: canReply,
-                        decoration: const InputDecoration(
-                          labelText: 'Add more details',
+                        decoration: InputDecoration(
+                          labelText: l10n.ticketReplyHint,
                           alignLabelWithHint: true,
                         ),
                       ),
                       const SizedBox(height: 16),
                       PrimaryPillButton(
-                        label: 'Send reply',
+                        label: l10n.ticketReplyAction,
                         isLoading: _isSubmittingReply,
                         onPressed: canReply ? _submitReply : null,
                       ),
@@ -576,7 +606,9 @@ class _MessageBubble extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isUser ? 'You' : message.senderRoleLabel,
+                  isUser
+                      ? context.l10n.ticketMessageYou
+                      : _senderRoleLabel(context, message.senderRole),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: isUser ? Colors.white70 : AppTheme.slateGray,
                   ),
@@ -674,48 +706,86 @@ class _TicketPriorityOption {
   final String value;
 }
 
-const _ticketStatuses = [
-  _TicketStatusOption(label: 'All', value: 'ALL'),
-  _TicketStatusOption(label: 'Open', value: 'OPEN'),
-  _TicketStatusOption(label: 'Pending', value: 'PENDING'),
-  _TicketStatusOption(label: 'In progress', value: 'IN_PROGRESS'),
-  _TicketStatusOption(label: 'Resolved', value: 'RESOLVED'),
-  _TicketStatusOption(label: 'Closed', value: 'CLOSED'),
-];
+class _TicketCategoryOption {
+  const _TicketCategoryOption({required this.label, required this.value});
 
-const _ticketPriorities = [
-  _TicketPriorityOption(label: 'Low', value: 'LOW'),
-  _TicketPriorityOption(label: 'Normal', value: 'NORMAL'),
-  _TicketPriorityOption(label: 'High', value: 'HIGH'),
-  _TicketPriorityOption(label: 'Urgent', value: 'URGENT'),
-];
-
-const _ticketCategories = [
-  'Account',
-  'Billing',
-  'Bug report',
-  'Order issue',
-  'General support',
-];
-
-extension on TicketSummary {
-  String get statusLabel => _humanize(status);
-  String get priorityLabel => _humanize(priority);
+  final String label;
+  final String value;
 }
 
-extension on TicketDetail {
-  String get statusLabel => _humanize(status);
-  String get priorityLabel => _humanize(priority);
+List<_TicketStatusOption> _ticketStatuses(AppLocalizations l10n) => [
+  _TicketStatusOption(label: l10n.ticketStatusAll, value: 'ALL'),
+  _TicketStatusOption(label: l10n.ticketStatusOpen, value: 'OPEN'),
+  _TicketStatusOption(label: l10n.ticketStatusPending, value: 'PENDING'),
+  _TicketStatusOption(label: l10n.ticketStatusInProgress, value: 'IN_PROGRESS'),
+  _TicketStatusOption(label: l10n.ticketStatusResolved, value: 'RESOLVED'),
+  _TicketStatusOption(label: l10n.ticketStatusClosed, value: 'CLOSED'),
+];
+
+List<_TicketPriorityOption> _ticketPriorities(AppLocalizations l10n) => [
+  _TicketPriorityOption(label: l10n.ticketPriorityLow, value: 'LOW'),
+  _TicketPriorityOption(label: l10n.ticketPriorityNormal, value: 'NORMAL'),
+  _TicketPriorityOption(label: l10n.ticketPriorityHigh, value: 'HIGH'),
+  _TicketPriorityOption(label: l10n.ticketPriorityUrgent, value: 'URGENT'),
+];
+
+List<_TicketCategoryOption> _ticketCategories(AppLocalizations l10n) => [
+  _TicketCategoryOption(label: l10n.ticketCategoryAccount, value: 'Account'),
+  _TicketCategoryOption(label: l10n.ticketCategoryBilling, value: 'Billing'),
+  _TicketCategoryOption(
+    label: l10n.ticketCategoryBugReport,
+    value: 'Bug report',
+  ),
+  _TicketCategoryOption(
+    label: l10n.ticketCategoryOrderIssue,
+    value: 'Order issue',
+  ),
+  _TicketCategoryOption(
+    label: l10n.ticketCategoryGeneralSupport,
+    value: 'General support',
+  ),
+];
+
+String _ticketStatusLabel(BuildContext context, String value) {
+  final l10n = context.l10n;
+  return switch (value) {
+    'OPEN' => l10n.ticketStatusOpen,
+    'PENDING' => l10n.ticketStatusPending,
+    'IN_PROGRESS' => l10n.ticketStatusInProgress,
+    'RESOLVED' => l10n.ticketStatusResolved,
+    'CLOSED' => l10n.ticketStatusClosed,
+    _ => value,
+  };
 }
 
-extension on TicketMessage {
-  String get senderRoleLabel => _humanize(senderRole);
+String _ticketPriorityLabel(BuildContext context, String value) {
+  final l10n = context.l10n;
+  return switch (value) {
+    'LOW' => l10n.ticketPriorityLow,
+    'NORMAL' => l10n.ticketPriorityNormal,
+    'HIGH' => l10n.ticketPriorityHigh,
+    'URGENT' => l10n.ticketPriorityUrgent,
+    _ => value,
+  };
 }
 
-String _humanize(String value) {
-  return value
-      .toLowerCase()
-      .split('_')
-      .map((segment) => '${segment[0].toUpperCase()}${segment.substring(1)}')
-      .join(' ');
+String _ticketCategoryLabel(BuildContext context, String value) {
+  final l10n = context.l10n;
+  return switch (value) {
+    'Account' => l10n.ticketCategoryAccount,
+    'Billing' => l10n.ticketCategoryBilling,
+    'Bug report' => l10n.ticketCategoryBugReport,
+    'Order issue' => l10n.ticketCategoryOrderIssue,
+    'General support' => l10n.ticketCategoryGeneralSupport,
+    _ => value,
+  };
+}
+
+String _senderRoleLabel(BuildContext context, String value) {
+  final l10n = context.l10n;
+  return switch (value) {
+    'USER' => l10n.messageSenderUser,
+    'SYSTEM' => l10n.messageSenderSystem,
+    _ => l10n.messageSenderSupportAgent,
+  };
 }

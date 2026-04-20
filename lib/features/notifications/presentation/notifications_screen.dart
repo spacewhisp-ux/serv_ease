@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import '../../../app/app_theme.dart';
+import '../../../core/localization/app_localizations_x.dart';
 import '../../../core/widgets/empty_state_card.dart';
 import '../../../core/widgets/primary_pill_button.dart';
 import '../../../core/widgets/surface_card.dart';
@@ -27,6 +28,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<NotificationsCubit, NotificationsState>(
       builder: (context, state) {
+        final l10n = context.l10n;
         return SafeArea(
           top: false,
           child: RefreshIndicator(
@@ -44,12 +46,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Stay in the loop.',
+                            l10n.notificationsHeadline,
                             style: Theme.of(context).textTheme.displaySmall,
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            'Review support updates and mark messages as read.',
+                            l10n.notificationsDescription,
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ],
@@ -64,7 +66,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 if (state.unreadCount > 0) ...[
                   const SizedBox(height: 20),
                   PrimaryPillButton(
-                    label: 'Mark all as read',
+                    label: l10n.notificationsMarkAllRead,
                     onPressed: () =>
                         context.read<NotificationsCubit>().markAllAsRead(),
                   ),
@@ -79,13 +81,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   )
                 else if (state.status == NotificationsStatus.failure)
                   EmptyStateCard(
-                    title: 'Could not load notifications',
-                    description: state.errorMessage ?? 'Please try again.',
+                    title: l10n.notificationsLoadFailed,
+                    description: state.errorMessage ?? l10n.commonTryAgain,
                   )
                 else if (state.items.isEmpty)
-                  const EmptyStateCard(
-                    title: 'No notifications',
-                    description: 'Ticket updates will appear here.',
+                  EmptyStateCard(
+                    title: l10n.notificationsEmptyTitle,
+                    description: l10n.notificationsEmptyDescription,
                   )
                 else
                   ...state.items.map(
@@ -110,7 +112,9 @@ class _NotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formatter = DateFormat('MMM d, HH:mm');
+    final formatter = DateFormat.yMMMd(
+      Localizations.localeOf(context).toLanguageTag(),
+    ).add_Hm();
     return SurfaceCard(
       child: InkWell(
         borderRadius: BorderRadius.circular(18),
@@ -147,7 +151,7 @@ class _NotificationCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    '${notification.typeLabel} • ${formatter.format(notification.createdAt.toLocal())}',
+                    '${_notificationTypeLabel(context, notification.type)} • ${formatter.format(notification.createdAt.toLocal())}',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ],
@@ -175,7 +179,7 @@ class _UnreadBadge extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: Text(
-          '$count unread',
+          context.l10n.notificationsUnreadCount(count),
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: AppTheme.pureWhite,
             fontWeight: FontWeight.w700,
@@ -186,12 +190,12 @@ class _UnreadBadge extends StatelessWidget {
   }
 }
 
-extension on AppNotification {
-  String get typeLabel {
-    return type
-        .toLowerCase()
-        .split('_')
-        .map((segment) => '${segment[0].toUpperCase()}${segment.substring(1)}')
-        .join(' ');
-  }
+String _notificationTypeLabel(BuildContext context, String type) {
+  final l10n = context.l10n;
+  return switch (type) {
+    'TICKET_REPLY' => l10n.notificationTypeTicketReply,
+    'TICKET_STATUS' => l10n.notificationTypeTicketStatus,
+    'ANNOUNCEMENT' => l10n.notificationTypeAnnouncement,
+    _ => l10n.notificationTypeSystem,
+  };
 }

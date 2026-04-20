@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
+import '../core/localization/app_localizations_x.dart';
+import '../core/localization/locale_cubit.dart';
 import '../core/network/api_client.dart';
 import '../core/session/session_cubit.dart';
 import '../core/session/session_store.dart';
@@ -14,6 +17,7 @@ import '../features/notifications/presentation/notifications_cubit.dart';
 import '../features/tickets/data/ticket_repository.dart';
 import '../features/tickets/presentation/create_ticket_cubit.dart';
 import '../features/tickets/presentation/ticket_list_cubit.dart';
+import '../l10n/app_localizations.dart';
 import 'app_shell.dart';
 import 'app_theme.dart';
 
@@ -62,6 +66,10 @@ class _ServEaseAppState extends State<ServEaseApp> {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
+            create: (_) =>
+                LocaleCubit(sessionStore: _sessionStore)..restoreLocale(),
+          ),
+          BlocProvider(
             create: (_) => SessionCubit(
               authRepository: _authRepository,
               sessionStore: _sessionStore,
@@ -86,23 +94,35 @@ class _ServEaseAppState extends State<ServEaseApp> {
             )..load(),
           ),
         ],
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Serv Ease',
-          theme: AppTheme.light(),
-          home: BlocBuilder<SessionCubit, SessionState>(
-            builder: (context, state) {
-              if (state.status == SessionStatus.loading) {
-                return const _SplashView();
-              }
+        child: BlocBuilder<LocaleCubit, LocaleState>(
+          builder: (context, localeState) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              onGenerateTitle: (context) => context.l10n.appTitle,
+              locale: localeState.locale,
+              supportedLocales: AppLocalizations.supportedLocales,
+              localizationsDelegates: [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+              ],
+              theme: AppTheme.light(),
+              home: BlocBuilder<SessionCubit, SessionState>(
+                builder: (context, state) {
+                  if (state.status == SessionStatus.loading) {
+                    return const _SplashView();
+                  }
 
-              if (state.status == SessionStatus.authenticated) {
-                return const AppShell();
-              }
+                  if (state.status == SessionStatus.authenticated) {
+                    return const AppShell();
+                  }
 
-              return const LoginScreen();
-            },
-          ),
+                  return const LoginScreen();
+                },
+              ),
+            );
+          },
         ),
       ),
     );

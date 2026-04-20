@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../app/app_theme.dart';
+import '../../../core/localization/app_localizations_x.dart';
 import '../../../core/widgets/empty_state_card.dart';
 import '../../../core/widgets/surface_card.dart';
 import '../data/faq_repository.dart';
@@ -33,6 +34,7 @@ class _FaqListScreenState extends State<FaqListScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<FaqListCubit, FaqListState>(
       builder: (context, state) {
+        final l10n = context.l10n;
         return SafeArea(
           top: false,
           child: RefreshIndicator(
@@ -43,20 +45,20 @@ class _FaqListScreenState extends State<FaqListScreen> {
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               children: [
                 Text(
-                  'Find answers fast.',
+                  l10n.faqHeadline,
                   style: Theme.of(context).textTheme.displaySmall,
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  'Search common support topics before opening a ticket.',
+                  l10n.faqDescription,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 24),
                 TextField(
                   controller: _searchController,
-                  decoration: const InputDecoration(
-                    labelText: 'Search FAQs',
-                    prefixIcon: Icon(Icons.search),
+                  decoration: InputDecoration(
+                    labelText: l10n.faqSearch,
+                    prefixIcon: const Icon(Icons.search),
                   ),
                   onSubmitted: (value) =>
                       context.read<FaqListCubit>().load(keyword: value),
@@ -67,7 +69,7 @@ class _FaqListScreenState extends State<FaqListScreen> {
                   child: Row(
                     children: [
                       _CategoryChip(
-                        label: 'All',
+                        label: l10n.filterAll,
                         selected: state.selectedCategoryId == null,
                         onSelected: () =>
                             context.read<FaqListCubit>().load(categoryId: ''),
@@ -95,13 +97,13 @@ class _FaqListScreenState extends State<FaqListScreen> {
                   )
                 else if (state.status == FaqListStatus.failure)
                   EmptyStateCard(
-                    title: 'Could not load FAQs',
-                    description: state.errorMessage ?? 'Please try again.',
+                    title: l10n.faqLoadFailed,
+                    description: state.errorMessage ?? l10n.commonTryAgain,
                   )
                 else if (state.items.isEmpty)
-                  const EmptyStateCard(
-                    title: 'No answers yet',
-                    description: 'Try a different keyword or category.',
+                  EmptyStateCard(
+                    title: l10n.faqEmptyTitle,
+                    description: l10n.faqEmptyDescription,
                   )
                 else
                   ...state.items.map(
@@ -183,7 +185,7 @@ class FaqDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final repository = context.read<FaqRepository>();
     return Scaffold(
-      appBar: AppBar(title: const Text('FAQ')),
+      appBar: AppBar(title: Text(context.l10n.faqTitle)),
       body: FutureBuilder<FaqDetail>(
         future: repository.fetchFaqDetail(faqId),
         builder: (context, snapshot) {
@@ -196,7 +198,7 @@ class FaqDetailScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(24),
                 child: EmptyStateCard(
-                  title: 'Could not load FAQ',
+                  title: context.l10n.faqDetailLoadFailed,
                   description: snapshot.error.toString(),
                 ),
               ),
@@ -205,12 +207,12 @@ class FaqDetailScreen extends StatelessWidget {
 
           final faq = snapshot.data;
           if (faq == null) {
-            return const Center(
+            return Center(
               child: Padding(
-                padding: EdgeInsets.all(24),
+                padding: const EdgeInsets.all(24),
                 child: EmptyStateCard(
-                  title: 'FAQ not found',
-                  description: 'Please return to the list and try again.',
+                  title: context.l10n.faqNotFound,
+                  description: context.l10n.commonReturnToList,
                 ),
               ),
             );

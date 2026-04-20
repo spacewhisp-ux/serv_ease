@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/localization/app_localizations_x.dart';
 import '../../../core/session/session_cubit.dart';
 import '../../../core/widgets/primary_pill_button.dart';
 import '../../../core/widgets/surface_card.dart';
@@ -28,21 +29,22 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _submit(LoginState state) {
+    final l10n = context.l10n;
     final account = _accountController.text.trim();
     final password = _passwordController.text;
     final displayName = _displayNameController.text.trim();
 
     String? message;
     if (account.isEmpty) {
-      message = 'Enter your email or phone number.';
+      message = l10n.loginValidationAccount;
     } else if (password.length < 8) {
-      message = 'Password must be at least 8 characters.';
+      message = l10n.loginValidationPassword;
     } else if (state.isRegistering && displayName.length < 2) {
-      message = 'Display name must be at least 2 characters.';
+      message = l10n.loginValidationDisplayName;
     } else if (state.isRegistering && !account.contains('@')) {
       final phonePattern = RegExp(r'^\+?[0-9]{8,15}$');
       if (!phonePattern.hasMatch(account)) {
-        message = 'Use a valid email or phone number in international format.';
+        message = l10n.loginValidationAccountFormat;
       }
     }
 
@@ -70,6 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
       builder: (context, state) {
+        final l10n = context.l10n;
         return Scaffold(
           body: SafeArea(
             child: Center(
@@ -83,39 +86,39 @@ class _LoginScreenState extends State<LoginScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Customer care, simplified.',
+                          l10n.loginHeadline,
                           style: Theme.of(context).textTheme.displaySmall,
                         ),
                         const SizedBox(height: 12),
                         Text(
                           state.isRegistering
-                              ? 'Create your account to search answers, submit tickets, and track support updates.'
-                              : 'Sign in to access FAQs, tickets, and notifications from your support workspace.',
+                              ? l10n.loginRegisterDescription
+                              : l10n.loginSignInDescription,
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         const SizedBox(height: 24),
                         if (state.isRegistering) ...[
                           TextField(
                             controller: _displayNameController,
-                            decoration: const InputDecoration(
-                              labelText: 'Display name',
+                            decoration: InputDecoration(
+                              labelText: l10n.loginDisplayName,
                             ),
                           ),
                           const SizedBox(height: 16),
                         ],
                         TextField(
                           controller: _accountController,
-                          decoration: const InputDecoration(
-                            labelText: 'Email or phone',
-                            hintText: 'name@example.com or +8613812345678',
+                          decoration: InputDecoration(
+                            labelText: l10n.loginAccount,
+                            hintText: l10n.loginAccountHint,
                           ),
                         ),
                         const SizedBox(height: 16),
                         TextField(
                           controller: _passwordController,
                           obscureText: true,
-                          decoration: const InputDecoration(
-                            labelText: 'Password',
+                          decoration: InputDecoration(
+                            labelText: l10n.loginPassword,
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -131,8 +134,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           width: double.infinity,
                           child: PrimaryPillButton(
                             label: state.isRegistering
-                                ? 'Create account'
-                                : 'Sign in',
+                                ? l10n.loginCreateAccount
+                                : l10n.loginSignIn,
                             isLoading: state.status == LoginStatus.submitting,
                             onPressed: () => _submit(state),
                           ),
@@ -145,8 +148,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                           child: Text(
                             state.isRegistering
-                                ? 'Already have an account? Sign in'
-                                : 'Need an account? Create one',
+                                ? l10n.loginAlreadyHaveAccount
+                                : l10n.loginNeedAccount,
                           ),
                         ),
                       ],
