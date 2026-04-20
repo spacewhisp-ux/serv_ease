@@ -1,20 +1,27 @@
 import 'dart:convert';
 
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SessionStore {
   static const _accessTokenKey = 'access_token';
   static const _refreshTokenKey = 'refresh_token';
   static const _userJsonKey = 'user_json';
 
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  Future<SharedPreferences> get _preferences => SharedPreferences.getInstance();
 
-  Future<String?> readAccessToken() => _storage.read(key: _accessTokenKey);
+  Future<String?> readAccessToken() async {
+    final preferences = await _preferences;
+    return preferences.getString(_accessTokenKey);
+  }
 
-  Future<String?> readRefreshToken() => _storage.read(key: _refreshTokenKey);
+  Future<String?> readRefreshToken() async {
+    final preferences = await _preferences;
+    return preferences.getString(_refreshTokenKey);
+  }
 
   Future<Map<String, dynamic>?> readUser() async {
-    final raw = await _storage.read(key: _userJsonKey);
+    final preferences = await _preferences;
+    final raw = preferences.getString(_userJsonKey);
     if (raw == null) {
       return null;
     }
@@ -27,10 +34,11 @@ class SessionStore {
     required String refreshToken,
     required Map<String, dynamic> user,
   }) async {
+    final preferences = await _preferences;
     await Future.wait([
-      _storage.write(key: _accessTokenKey, value: accessToken),
-      _storage.write(key: _refreshTokenKey, value: refreshToken),
-      _storage.write(key: _userJsonKey, value: jsonEncode(user)),
+      preferences.setString(_accessTokenKey, accessToken),
+      preferences.setString(_refreshTokenKey, refreshToken),
+      preferences.setString(_userJsonKey, jsonEncode(user)),
     ]);
   }
 
@@ -38,21 +46,24 @@ class SessionStore {
     required String accessToken,
     required String refreshToken,
   }) async {
+    final preferences = await _preferences;
     await Future.wait([
-      _storage.write(key: _accessTokenKey, value: accessToken),
-      _storage.write(key: _refreshTokenKey, value: refreshToken),
+      preferences.setString(_accessTokenKey, accessToken),
+      preferences.setString(_refreshTokenKey, refreshToken),
     ]);
   }
 
-  Future<void> updateUser(Map<String, dynamic> user) {
-    return _storage.write(key: _userJsonKey, value: jsonEncode(user));
+  Future<void> updateUser(Map<String, dynamic> user) async {
+    final preferences = await _preferences;
+    await preferences.setString(_userJsonKey, jsonEncode(user));
   }
 
-  Future<void> clear() {
-    return Future.wait([
-      _storage.delete(key: _accessTokenKey),
-      _storage.delete(key: _refreshTokenKey),
-      _storage.delete(key: _userJsonKey),
+  Future<void> clear() async {
+    final preferences = await _preferences;
+    await Future.wait([
+      preferences.remove(_accessTokenKey),
+      preferences.remove(_refreshTokenKey),
+      preferences.remove(_userJsonKey),
     ]);
   }
 }
