@@ -18,7 +18,7 @@ class AppShell extends StatefulWidget {
 class _AppShellState extends State<AppShell> {
   int _currentIndex = 0;
 
-  static const _titles = ['FAQs', 'Tickets', 'Notifications'];
+  static const _titles = ['FAQs', 'Tickets', 'Alerts'];
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +43,17 @@ class _AppShellState extends State<AppShell> {
           ),
         ],
       ),
-      body: IndexedStack(
-        index: _currentIndex,
-        children: const [
-          FaqListScreen(),
-          TicketListScreen(),
-          NotificationsScreen(),
-        ],
+      body: SafeArea(
+        top: false,
+        bottom: false,
+        child: IndexedStack(
+          index: _currentIndex,
+          children: const [
+            FaqListScreen(),
+            TicketListScreen(),
+            NotificationsScreen(),
+          ],
+        ),
       ),
       bottomNavigationBar: NavigationBar(
         backgroundColor: AppTheme.pureWhite,

@@ -1,7 +1,7 @@
 export const appConfig = () => ({
   app: {
     nodeEnv: process.env.NODE_ENV ?? 'development',
-    port: Number(process.env.PORT ?? 3000),
+    port: Number(process.env.PORT ?? 3001),
     apiPrefix: process.env.API_PREFIX ?? 'v1',
     databaseUrl: process.env.DATABASE_URL ?? '',
     jwt: {

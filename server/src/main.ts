@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import type { NextFunction, Request, Response } from 'express';
 
 import { AppModule } from './app.module';
 import { AppExceptionFilter } from './common/exceptions/app.exception-filter';
@@ -13,6 +14,10 @@ async function bootstrap() {
   const port = configService.get<number>('app.port', 3001);
 
   app.setGlobalPrefix(apiPrefix);
+  app.use((req: Request, _res: Response, next: NextFunction) => {
+    console.log(`${req.method} ${req.url}`);
+    next();
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

@@ -37,7 +37,19 @@ class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         foregroundColor: expoBlack,
-        centerTitle: false,
+        titleTextStyle: TextStyle(
+          fontSize: 17,
+          fontWeight: FontWeight.w600,
+          color: expoBlack,
+        ),
+        centerTitle: true,
+      ),
+      navigationBarTheme: const NavigationBarThemeData(
+        backgroundColor: pureWhite,
+        indicatorColor: cloudGray,
+        labelTextStyle: WidgetStatePropertyAll(
+          TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+        ),
       ),
       textTheme: const TextTheme(
         displaySmall: TextStyle(

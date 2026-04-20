@@ -1,5 +1,3 @@
-yarn run v1.22.22
-$ /Users/yucheng/Desktop/serv_ease/server/node_modules/.bin/prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script
 -- CreateSchema
 CREATE SCHEMA IF NOT EXISTS "public";
 
@@ -267,4 +265,3 @@ ALTER TABLE "notifications" ADD CONSTRAINT "notifications_user_id_fkey" FOREIGN 
 -- AddForeignKey
 ALTER TABLE "push_devices" ADD CONSTRAINT "push_devices_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
-Done in 0.84s.

@@ -27,70 +27,75 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<NotificationsCubit, NotificationsState>(
       builder: (context, state) {
-        return RefreshIndicator(
-          onRefresh: () => context.read<NotificationsCubit>().load(),
-          child: ListView(
-            padding: const EdgeInsets.all(24),
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Stay in the loop.',
-                          style: Theme.of(context).textTheme.displaySmall,
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          'Review support updates and mark messages as read.',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ],
+        return SafeArea(
+          top: false,
+          child: RefreshIndicator(
+            onRefresh: () => context.read<NotificationsCubit>().load(),
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+              physics: const AlwaysScrollableScrollPhysics(),
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Stay in the loop.',
+                            style: Theme.of(context).textTheme.displaySmall,
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'Review support updates and mark messages as read.',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (state.unreadCount > 0) ...[
+                      const SizedBox(width: 16),
+                      _UnreadBadge(count: state.unreadCount),
+                    ],
+                  ],
+                ),
+                if (state.unreadCount > 0) ...[
+                  const SizedBox(height: 20),
+                  PrimaryPillButton(
+                    label: 'Mark all as read',
+                    onPressed: () =>
+                        context.read<NotificationsCubit>().markAllAsRead(),
+                  ),
+                ],
+                const SizedBox(height: 20),
+                if (state.status == NotificationsStatus.loading)
+                  const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(24),
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                else if (state.status == NotificationsStatus.failure)
+                  EmptyStateCard(
+                    title: 'Could not load notifications',
+                    description: state.errorMessage ?? 'Please try again.',
+                  )
+                else if (state.items.isEmpty)
+                  const EmptyStateCard(
+                    title: 'No notifications',
+                    description: 'Ticket updates will appear here.',
+                  )
+                else
+                  ...state.items.map(
+                    (notification) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: _NotificationCard(notification: notification),
                     ),
                   ),
-                  if (state.unreadCount > 0) ...[
-                    const SizedBox(width: 16),
-                    _UnreadBadge(count: state.unreadCount),
-                  ],
-                ],
-              ),
-              if (state.unreadCount > 0) ...[
-                const SizedBox(height: 20),
-                PrimaryPillButton(
-                  label: 'Mark all as read',
-                  onPressed: () =>
-                      context.read<NotificationsCubit>().markAllAsRead(),
-                ),
               ],
-              const SizedBox(height: 20),
-              if (state.status == NotificationsStatus.loading)
-                const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(24),
-                    child: CircularProgressIndicator(),
-                  ),
-                )
-              else if (state.status == NotificationsStatus.failure)
-                EmptyStateCard(
-                  title: 'Could not load notifications',
-                  description: state.errorMessage ?? 'Please try again.',
-                )
-              else if (state.items.isEmpty)
-                const EmptyStateCard(
-                  title: 'No notifications',
-                  description: 'Ticket updates will appear here.',
-                )
-              else
-                ...state.items.map(
-                  (notification) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: _NotificationCard(notification: notification),
-                  ),
-                ),
-            ],
+            ),
           ),
         );
       },

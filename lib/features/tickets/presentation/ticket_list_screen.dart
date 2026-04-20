@@ -28,25 +28,14 @@ class _TicketListScreenState extends State<TicketListScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<TicketListCubit, TicketListState>(
       builder: (context, state) {
-        return Scaffold(
-          floatingActionButton: FloatingActionButton.extended(
-            onPressed: () async {
-              final created = await Navigator.of(context).push<bool>(
-                MaterialPageRoute(builder: (_) => const CreateTicketScreen()),
-              );
-              if (created == true && context.mounted) {
-                await context.read<TicketListCubit>().load();
-              }
-            },
-            backgroundColor: AppTheme.expoBlack,
-            foregroundColor: AppTheme.pureWhite,
-            label: const Text('New ticket'),
-            icon: const Icon(Icons.add),
-          ),
-          body: RefreshIndicator(
+        return SafeArea(
+          top: false,
+          child: RefreshIndicator(
             onRefresh: () => context.read<TicketListCubit>().load(),
             child: ListView(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+              physics: const AlwaysScrollableScrollPhysics(),
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               children: [
                 Text(
                   'Track every support request.',
@@ -56,6 +45,23 @@ class _TicketListScreenState extends State<TicketListScreen> {
                 Text(
                   'Create a ticket, follow replies, and close the case when it is resolved.',
                   style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: PrimaryPillButton(
+                    label: 'New ticket',
+                    onPressed: () async {
+                      final created = await Navigator.of(context).push<bool>(
+                        MaterialPageRoute(
+                          builder: (_) => const CreateTicketScreen(),
+                        ),
+                      );
+                      if (created == true && context.mounted) {
+                        await context.read<TicketListCubit>().load();
+                      }
+                    },
+                  ),
                 ),
                 const SizedBox(height: 24),
                 SingleChildScrollView(
