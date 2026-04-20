@@ -19,11 +19,14 @@ class ApiClient {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
+          final normalizedPath = _normalizePath(options.path);
+          options.path = normalizedPath;
+
           if (kDebugMode) {
             debugPrint('API ${options.method} ${options.uri}');
           }
 
-          if (!_publicPaths.contains(options.path)) {
+          if (!_publicPaths.contains(normalizedPath)) {
             final token = _accessToken ?? await _sessionStore.readAccessToken();
             if (token != null && token.isNotEmpty) {
               options.headers['Authorization'] = 'Bearer $token';
@@ -34,10 +37,11 @@ class ApiClient {
         },
         onError: (error, handler) async {
           final requestOptions = error.requestOptions;
+          final normalizedPath = _normalizePath(requestOptions.path);
           final isUnauthorized = error.response?.statusCode == 401;
           final canRefresh =
               isUnauthorized &&
-              !_publicPaths.contains(requestOptions.path) &&
+              !_publicPaths.contains(normalizedPath) &&
               requestOptions.extra['retried'] != true;
 
           if (canRefresh) {
@@ -133,6 +137,7 @@ class ApiClient {
 
   Future<Response<dynamic>> _retryRequest(RequestOptions requestOptions) async {
     final updated = requestOptions.copyWith(
+      path: _normalizePath(requestOptions.path),
       headers: {
         ...requestOptions.headers,
         if (_accessToken != null) 'Authorization': 'Bearer $_accessToken',
@@ -223,5 +228,9 @@ class ApiClient {
       error.message ?? 'Network request failed',
       statusCode: error.response?.statusCode,
     );
+  }
+
+  String _normalizePath(String path) {
+    return path.startsWith('/') ? path.substring(1) : path;
   }
 }
