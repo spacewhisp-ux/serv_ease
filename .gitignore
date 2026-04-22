@@ -50,3 +50,8 @@ server/node_modules/
 server/dist/
 server/.env
 server/coverage/
+
+
+admin-web/node_modules/
+
+admin-web/dist/

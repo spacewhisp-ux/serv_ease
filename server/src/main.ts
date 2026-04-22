@@ -13,6 +13,13 @@ async function bootstrap() {
   const apiPrefix = configService.get<string>('app.apiPrefix', 'v1');
   const port = configService.get<number>('app.port', 3001);
 
+  app.enableCors({
+    origin: [
+      'http://localhost:5174',
+      'http://127.0.0.1:5174',
+    ],
+    credentials: true,
+  });
   app.setGlobalPrefix(apiPrefix);
   app.use((req: Request, _res: Response, next: NextFunction) => {
     console.log(`${req.method} ${req.url}`);

@@ -18,3 +18,24 @@ samples, guidance on mobile development, and a full API reference.
 
 
 http://47.82.121.213:3001/v1/health
+
+## Admin Web
+
+The admin web app lives in `admin-web/` and manages FAQ content through the NestJS API.
+
+```bash
+cd admin-web
+npm install
+cp .env.example .env
+npm run dev
+```
+
+Local defaults:
+
+- Admin web: `http://localhost:5174`
+- API base URL: `http://localhost:3001/v1`
+
+Use an `AGENT` or `ADMIN` account to sign in. Phase 1 includes FAQ category and FAQ management.
+
+
+admin@163.com 123456789 

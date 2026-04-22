@@ -1,8 +1,11 @@
 import { PrismaClient, UserRole, UserStatus } from '@prisma/client';
+import * as bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
 async function main() {
+  const passwordHash = await bcrypt.hash('123456789', 10);
+
   const category = await prisma.faqCategory.upsert({
     where: { id: '00000000-0000-0000-0000-000000000001' },
     update: {},
@@ -28,12 +31,34 @@ async function main() {
 
   await prisma.user.upsert({
     where: { email: 'agent@example.com' },
-    update: {},
-    create: {
-      email: 'agent@example.com',
-      passwordHash: 'seed-password-hash',
+    update: {
+      passwordHash,
       displayName: 'Seed Agent',
       role: UserRole.AGENT,
+      status: UserStatus.ACTIVE,
+    },
+    create: {
+      email: 'agent@example.com',
+      passwordHash,
+      displayName: 'Seed Agent',
+      role: UserRole.AGENT,
+      status: UserStatus.ACTIVE,
+    },
+  });
+
+  await prisma.user.upsert({
+    where: { email: 'admin@163.com' },
+    update: {
+      passwordHash,
+      displayName: 'Seed Admin',
+      role: UserRole.ADMIN,
+      status: UserStatus.ACTIVE,
+    },
+    create: {
+      email: 'admin@163.com',
+      passwordHash,
+      displayName: 'Seed Admin',
+      role: UserRole.ADMIN,
       status: UserStatus.ACTIVE,
     },
   });
