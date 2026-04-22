@@ -2,17 +2,21 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   Param,
   Patch,
   Post,
   Query,
+  Res,
   UseGuards,
 } from '@nestjs/common';
+import type { Response } from 'express';
 
 import { AuthenticatedUser } from '../auth/authenticated-user.interface';
 import { CurrentUser } from '../common/current-user.decorator';
 import { JwtAuthGuard } from '../common/jwt-auth.guard';
+import { LoggerService } from '../common/logger/logger.service';
 import { AdminService } from './admin.service';
 import { AdminListFaqCategoriesDto } from './dto/admin-list-faq-categories.dto';
 import { AdminListFaqsDto } from './dto/admin-list-faqs.dto';
@@ -23,12 +27,16 @@ import { CreateFaqCategoryDto } from './dto/create-faq-category.dto';
 import { CreateFaqDto } from './dto/create-faq.dto';
 import { UpdateAdminTicketStatusDto } from './dto/update-admin-ticket-status.dto';
 import { UpdateFaqCategoryDto } from './dto/update-faq-category.dto';
+import { ReadLogDto } from './dto/read-log.dto';
 import { UpdateFaqDto } from './dto/update-faq.dto';
 
 @Controller('admin')
 @UseGuards(JwtAuthGuard)
 export class AdminController {
-  constructor(private readonly adminService: AdminService) {}
+  constructor(
+    private readonly adminService: AdminService,
+    private readonly loggerService: LoggerService,
+  ) {}
 
   @Get('faq-categories')
   listFaqCategories(
@@ -136,5 +144,47 @@ export class AdminController {
     @Body() dto: UpdateAdminTicketStatusDto,
   ) {
     return this.adminService.updateTicketStatus(user, id, dto);
+  }
+
+  // ─── Access Logs ────────────────────────────────────────────
+
+  @Get('logs/dates')
+  listLogDates(@CurrentUser() user: AuthenticatedUser) {
+    this.assertAgent(user);
+    return this.loggerService.listLogDates();
+  }
+
+  @Get('logs')
+  readLog(
+    @CurrentUser() user: AuthenticatedUser,
+    @Query() query: ReadLogDto,
+  ) {
+    this.assertAgent(user);
+    return this.loggerService.readLog(query.date, {
+      page: query.page,
+      pageSize: query.pageSize,
+      keyword: query.keyword,
+    });
+  }
+
+  @Get('logs/download/:date')
+  downloadLog(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('date') date: string,
+    @Res() res: Response,
+  ) {
+    this.assertAgent(user);
+    const filePath = this.loggerService.getLogFilePath(date);
+    if (!filePath) {
+      res.status(404).json({ success: false, error: { message: 'Log file not found' } });
+      return;
+    }
+    res.download(filePath, `access-${date}.log`);
+  }
+
+  private assertAgent(user: AuthenticatedUser) {
+    if (user.role !== 'AGENT' && user.role !== 'ADMIN') {
+      throw new ForbiddenException('Agent access required');
+    }
   }
 }

@@ -7,6 +7,7 @@ import { CategoryFormPage } from '../modules/faq-categories/CategoryFormPage';
 import { CategoryListPage } from '../modules/faq-categories/CategoryListPage';
 import { FaqFormPage } from '../modules/faqs/FaqFormPage';
 import { FaqListPage } from '../modules/faqs/FaqListPage';
+import { LogListPage } from '../modules/logs/LogListPage';
 
 export const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
@@ -23,6 +24,7 @@ export const router = createBrowserRouter([
           { path: '/categories', element: <CategoryListPage /> },
           { path: '/categories/new', element: <CategoryFormPage /> },
           { path: '/categories/:id/edit', element: <CategoryFormPage /> },
+          { path: '/logs', element: <LogListPage /> },
         ],
       },
     ],
