@@ -61,29 +61,33 @@ class FaqListCubit extends Cubit<FaqListState> {
   final FaqRepository _faqRepository;
 
   Future<void> load({String? categoryId, String? keyword}) async {
+    final nextSelectedCategoryId = categoryId ?? state.selectedCategoryId;
+    final nextKeyword = keyword ?? state.keyword;
+
     emit(
       state.copyWith(
         status: FaqListStatus.loading,
-        selectedCategoryId: categoryId ?? state.selectedCategoryId,
-        keyword: keyword ?? state.keyword,
+        selectedCategoryId: nextSelectedCategoryId,
+        keyword: nextKeyword,
       ),
     );
 
     try {
-      final categories = state.categories.isEmpty
-          ? await _faqRepository.fetchCategories()
-          : state.categories;
+      final categories = await _faqRepository.fetchCategories();
+      final hasSelectedCategory = nextSelectedCategoryId == null ||
+          categories.any((category) => category.id == nextSelectedCategoryId);
+      final resolvedCategoryId = hasSelectedCategory ? nextSelectedCategoryId : null;
       final result = await _faqRepository.fetchFaqs(
-        categoryId: categoryId ?? state.selectedCategoryId,
-        keyword: keyword ?? state.keyword,
+        categoryId: resolvedCategoryId,
+        keyword: nextKeyword,
       );
       emit(
         state.copyWith(
           status: FaqListStatus.success,
           categories: categories,
           items: result.items,
-          selectedCategoryId: categoryId ?? state.selectedCategoryId,
-          keyword: keyword ?? state.keyword,
+          selectedCategoryId: resolvedCategoryId,
+          keyword: nextKeyword,
         ),
       );
     } catch (error) {

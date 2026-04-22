@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -276,6 +277,13 @@ export class AdminService {
               phone: true,
             },
           },
+          assignedAgent: {
+            select: {
+              id: true,
+              displayName: true,
+              email: true,
+            },
+          },
         },
       }),
       this.prisma.ticket.count({ where }),
@@ -292,6 +300,90 @@ export class AdminService {
     };
   }
 
+  async getTicket(user: AuthenticatedUser, id: string) {
+    this.assertAgent(user);
+
+    const ticket = await this.prisma.ticket.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        ticketNo: true,
+        subject: true,
+        description: true,
+        category: true,
+        status: true,
+        priority: true,
+        createdAt: true,
+        updatedAt: true,
+        resolvedAt: true,
+        closedAt: true,
+        user: {
+          select: {
+            id: true,
+            displayName: true,
+            email: true,
+            phone: true,
+          },
+        },
+        assignedAgent: {
+          select: {
+            id: true,
+            displayName: true,
+            email: true,
+          },
+        },
+        attachments: {
+          where: { status: 'ACTIVE' },
+          orderBy: { createdAt: 'asc' },
+          select: {
+            id: true,
+            fileName: true,
+            mimeType: true,
+            fileSize: true,
+            createdAt: true,
+            messageId: true,
+          },
+        },
+        messages: {
+          where: { deletedAt: null },
+          orderBy: { createdAt: 'asc' },
+          select: {
+            id: true,
+            senderRole: true,
+            type: true,
+            body: true,
+            isInternal: true,
+            createdAt: true,
+            sender: {
+              select: {
+                id: true,
+                displayName: true,
+                email: true,
+              },
+            },
+            attachments: {
+              where: { status: 'ACTIVE' },
+              orderBy: { createdAt: 'asc' },
+              select: {
+                id: true,
+                fileName: true,
+                mimeType: true,
+                fileSize: true,
+                createdAt: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!ticket) {
+      throw new NotFoundException('Ticket not found');
+    }
+
+    return ticket;
+  }
+
   async assignTicket(user: AuthenticatedUser, id: string, dto: AssignTicketDto) {
     this.assertAgent(user);
 
@@ -301,17 +393,35 @@ export class AdminService {
         id: true,
         ticketNo: true,
         userId: true,
+        status: true,
       },
     });
     if (!ticket) {
       throw new NotFoundException('Ticket not found');
+    }
+    if (ticket.status === TicketStatus.CLOSED) {
+      throw new BadRequestException('Closed tickets cannot be assigned');
+    }
+
+    const agent = await this.prisma.user.findUnique({
+      where: { id: dto.agentId },
+      select: { id: true, role: true, status: true },
+    });
+    if (!agent || (agent.role !== 'AGENT' && agent.role !== 'ADMIN')) {
+      throw new BadRequestException('Assignee must be an agent or admin');
+    }
+    if (agent.status !== 'ACTIVE') {
+      throw new BadRequestException('Assignee must be active');
     }
 
     const updatedTicket = await this.prisma.ticket.update({
       where: { id },
       data: {
         assignedAgentId: dto.agentId,
-        status: TicketStatus.IN_PROGRESS,
+        status:
+          ticket.status === TicketStatus.OPEN || ticket.status === TicketStatus.PENDING
+            ? TicketStatus.IN_PROGRESS
+            : ticket.status,
       },
       select: {
         id: true,
@@ -342,10 +452,14 @@ export class AdminService {
         ticketNo: true,
         userId: true,
         assignedAgentId: true,
+        status: true,
       },
     });
     if (!ticket) {
       throw new NotFoundException('Ticket not found');
+    }
+    if (ticket.status === TicketStatus.CLOSED) {
+      throw new BadRequestException('Closed tickets cannot be replied to');
     }
 
     const message = await this.prisma.ticketMessage.create({
@@ -364,6 +478,18 @@ export class AdminService {
         createdAt: true,
       },
     });
+
+    if (dto.attachmentIds?.length) {
+      await this.prisma.ticketAttachment.updateMany({
+        where: {
+          id: { in: dto.attachmentIds },
+          uploaderId: user.id,
+          ticketId: id,
+          messageId: null,
+        },
+        data: { messageId: message.id },
+      });
+    }
 
     await this.prisma.ticket.update({
       where: { id },
@@ -400,18 +526,22 @@ export class AdminService {
         id: true,
         ticketNo: true,
         userId: true,
+        status: true,
       },
     });
     if (!ticket) {
       throw new NotFoundException('Ticket not found');
     }
 
+    this.assertStatusTransition(ticket.status, dto.status);
+
+    const now = new Date();
     const updatedTicket = await this.prisma.ticket.update({
       where: { id },
       data: {
         status: dto.status,
-        resolvedAt: dto.status === TicketStatus.RESOLVED ? new Date() : null,
-        closedAt: dto.status === TicketStatus.CLOSED ? new Date() : null,
+        resolvedAt: dto.status === TicketStatus.RESOLVED ? now : null,
+        closedAt: dto.status === TicketStatus.CLOSED ? now : null,
       },
       select: {
         id: true,
@@ -459,6 +589,40 @@ export class AdminService {
     return [...new Set((keywords ?? []).map((keyword) => keyword.trim()))].filter(
       Boolean,
     );
+  }
+
+  private assertStatusTransition(current: TicketStatus, next: TicketStatus) {
+    if (current === next) {
+      return;
+    }
+
+    const allowedTransitions: Record<TicketStatus, TicketStatus[]> = {
+      [TicketStatus.OPEN]: [
+        TicketStatus.PENDING,
+        TicketStatus.IN_PROGRESS,
+        TicketStatus.RESOLVED,
+        TicketStatus.CLOSED,
+      ],
+      [TicketStatus.PENDING]: [
+        TicketStatus.OPEN,
+        TicketStatus.IN_PROGRESS,
+        TicketStatus.RESOLVED,
+        TicketStatus.CLOSED,
+      ],
+      [TicketStatus.IN_PROGRESS]: [
+        TicketStatus.PENDING,
+        TicketStatus.RESOLVED,
+        TicketStatus.CLOSED,
+      ],
+      [TicketStatus.RESOLVED]: [TicketStatus.IN_PROGRESS, TicketStatus.CLOSED],
+      [TicketStatus.CLOSED]: [],
+    };
+
+    if (!allowedTransitions[current].includes(next)) {
+      throw new BadRequestException(
+        `Ticket status cannot change from ${current} to ${next}`,
+      );
+    }
   }
 
   private assertAgent(user: AuthenticatedUser) {

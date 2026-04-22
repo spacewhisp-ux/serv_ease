@@ -122,16 +122,29 @@ export class TicketsService {
             type: true,
             body: true,
             createdAt: true,
+            attachments: {
+              where: { status: 'ACTIVE' },
+              orderBy: { createdAt: 'asc' },
+              select: {
+                id: true,
+                fileName: true,
+                mimeType: true,
+                fileSize: true,
+                createdAt: true,
+              },
+            },
           },
         },
         attachments: {
           where: { status: 'ACTIVE' },
+          orderBy: { createdAt: 'asc' },
           select: {
             id: true,
             fileName: true,
             mimeType: true,
             fileSize: true,
             createdAt: true,
+            messageId: true,
           },
         },
       },
@@ -221,6 +234,7 @@ export class TicketsService {
       select: {
         id: true,
         ticketNo: true,
+        assignedAgentId: true,
       },
     });
 
@@ -251,13 +265,15 @@ export class TicketsService {
       },
     });
 
-    await this.notificationsService.createNotification({
-      userId,
-      type: 'SYSTEM',
-      title: 'Ticket closed',
-      body: `Your ticket ${ticket.ticketNo} has been closed.`,
-      data: { ticketId: id, ticketNo: ticket.ticketNo },
-    });
+    if (ticket.assignedAgentId) {
+      await this.notificationsService.createNotification({
+        userId: ticket.assignedAgentId,
+        type: 'TICKET_UPDATED',
+        title: 'Ticket closed',
+        body: `User closed ${ticket.ticketNo}.`,
+        data: { ticketId: id, ticketNo: ticket.ticketNo },
+      });
+    }
 
     return {
       ...closedTicket,

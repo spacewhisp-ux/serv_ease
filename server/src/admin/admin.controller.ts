@@ -106,6 +106,11 @@ export class AdminController {
     return this.adminService.listTickets(user, query);
   }
 
+  @Get('tickets/:id')
+  getTicket(@CurrentUser() user: AuthenticatedUser, @Param('id') id: string) {
+    return this.adminService.getTicket(user, id);
+  }
+
   @Patch('tickets/:id/assign')
   assignTicket(
     @CurrentUser() user: AuthenticatedUser,
