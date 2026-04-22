@@ -1,11 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import type { NextFunction, Request, Response } from 'express';
 
 import { AppModule } from './app.module';
 import { AppExceptionFilter } from './common/exceptions/app.exception-filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { AccessLogInterceptor } from './common/interceptors/access-log.interceptor';
+import { LoggerService } from './common/logger/logger.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -21,10 +22,10 @@ async function bootstrap() {
     credentials: true,
   });
   app.setGlobalPrefix(apiPrefix);
-  app.use((req: Request, _res: Response, next: NextFunction) => {
-    console.log(`${req.method} ${req.url}`);
-    next();
-  });
+  app.useGlobalInterceptors(
+    new AccessLogInterceptor(app.get(LoggerService)),
+    new ResponseInterceptor(),
+  );
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -32,7 +33,6 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
-  app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalFilters(new AppExceptionFilter());
 
   await app.listen(port);
