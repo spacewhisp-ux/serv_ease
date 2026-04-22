@@ -3,15 +3,21 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { TicketStatus } from '@prisma/client';
+import { Prisma, TicketStatus } from '@prisma/client';
 
 import { AuthenticatedUser } from '../auth/authenticated-user.interface';
 import { NotificationsService } from '../notifications/notifications.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { AdminListFaqCategoriesDto } from './dto/admin-list-faq-categories.dto';
+import { AdminListFaqsDto } from './dto/admin-list-faqs.dto';
 import { AdminListTicketsDto } from './dto/admin-list-tickets.dto';
 import { AdminReplyTicketDto } from './dto/admin-reply-ticket.dto';
 import { AssignTicketDto } from './dto/assign-ticket.dto';
+import { CreateFaqCategoryDto } from './dto/create-faq-category.dto';
+import { CreateFaqDto } from './dto/create-faq.dto';
 import { UpdateAdminTicketStatusDto } from './dto/update-admin-ticket-status.dto';
+import { UpdateFaqCategoryDto } from './dto/update-faq-category.dto';
+import { UpdateFaqDto } from './dto/update-faq.dto';
 
 @Injectable()
 export class AdminService {
@@ -19,6 +25,221 @@ export class AdminService {
     private readonly prisma: PrismaService,
     private readonly notificationsService: NotificationsService,
   ) {}
+
+  async listFaqCategories(
+    user: AuthenticatedUser,
+    query: AdminListFaqCategoriesDto,
+  ) {
+    this.assertAgent(user);
+
+    return this.prisma.faqCategory.findMany({
+      where:
+        query.isActive === undefined ? undefined : { isActive: query.isActive },
+      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
+    });
+  }
+
+  async createFaqCategory(
+    user: AuthenticatedUser,
+    dto: CreateFaqCategoryDto,
+  ) {
+    this.assertAgent(user);
+
+    return this.prisma.faqCategory.create({
+      data: {
+        name: dto.name.trim(),
+        sortOrder: dto.sortOrder ?? 0,
+        isActive: dto.isActive ?? true,
+      },
+    });
+  }
+
+  async updateFaqCategory(
+    user: AuthenticatedUser,
+    id: string,
+    dto: UpdateFaqCategoryDto,
+  ) {
+    this.assertAgent(user);
+    await this.ensureFaqCategoryExists(id);
+
+    return this.prisma.faqCategory.update({
+      where: { id },
+      data: {
+        ...(dto.name === undefined ? {} : { name: dto.name.trim() }),
+        ...(dto.sortOrder === undefined ? {} : { sortOrder: dto.sortOrder }),
+        ...(dto.isActive === undefined ? {} : { isActive: dto.isActive }),
+      },
+    });
+  }
+
+  async deactivateFaqCategory(user: AuthenticatedUser, id: string) {
+    this.assertAgent(user);
+    await this.ensureFaqCategoryExists(id);
+
+    return this.prisma.faqCategory.update({
+      where: { id },
+      data: { isActive: false },
+    });
+  }
+
+  async listFaqs(user: AuthenticatedUser, query: AdminListFaqsDto) {
+    this.assertAgent(user);
+
+    const page = query.page ?? 1;
+    const pageSize = query.pageSize ?? 20;
+    const skip = (page - 1) * pageSize;
+    const trimmedKeyword = query.keyword?.trim();
+    const where: Prisma.FaqWhereInput = {
+      ...(query.categoryId ? { categoryId: query.categoryId } : {}),
+      ...(query.isActive === undefined ? {} : { isActive: query.isActive }),
+      ...(trimmedKeyword
+        ? {
+            OR: [
+              {
+                question: {
+                  contains: trimmedKeyword,
+                  mode: 'insensitive',
+                },
+              },
+              {
+                answer: {
+                  contains: trimmedKeyword,
+                  mode: 'insensitive',
+                },
+              },
+              {
+                keywords: {
+                  has: trimmedKeyword,
+                },
+              },
+            ],
+          }
+        : {}),
+    };
+
+    const [items, total] = await Promise.all([
+      this.prisma.faq.findMany({
+        where,
+        orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
+        skip,
+        take: pageSize,
+        include: {
+          category: {
+            select: {
+              id: true,
+              name: true,
+              isActive: true,
+              sortOrder: true,
+            },
+          },
+        },
+      }),
+      this.prisma.faq.count({ where }),
+    ]);
+
+    return {
+      items,
+      pagination: {
+        page,
+        pageSize,
+        total,
+        totalPages: Math.ceil(total / pageSize),
+      },
+    };
+  }
+
+  async getFaq(user: AuthenticatedUser, id: string) {
+    this.assertAgent(user);
+
+    const faq = await this.prisma.faq.findUnique({
+      where: { id },
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+            isActive: true,
+            sortOrder: true,
+          },
+        },
+      },
+    });
+
+    if (!faq) {
+      throw new NotFoundException('FAQ not found');
+    }
+
+    return faq;
+  }
+
+  async createFaq(user: AuthenticatedUser, dto: CreateFaqDto) {
+    this.assertAgent(user);
+    await this.ensureFaqCategoryExists(dto.categoryId);
+
+    return this.prisma.faq.create({
+      data: {
+        categoryId: dto.categoryId,
+        question: dto.question.trim(),
+        answer: dto.answer.trim(),
+        keywords: this.normalizeKeywords(dto.keywords),
+        sortOrder: dto.sortOrder ?? 0,
+        isActive: dto.isActive ?? true,
+      },
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+            isActive: true,
+            sortOrder: true,
+          },
+        },
+      },
+    });
+  }
+
+  async updateFaq(user: AuthenticatedUser, id: string, dto: UpdateFaqDto) {
+    this.assertAgent(user);
+    await this.ensureFaqExists(id);
+
+    if (dto.categoryId) {
+      await this.ensureFaqCategoryExists(dto.categoryId);
+    }
+
+    return this.prisma.faq.update({
+      where: { id },
+      data: {
+        ...(dto.categoryId === undefined ? {} : { categoryId: dto.categoryId }),
+        ...(dto.question === undefined ? {} : { question: dto.question.trim() }),
+        ...(dto.answer === undefined ? {} : { answer: dto.answer.trim() }),
+        ...(dto.keywords === undefined
+          ? {}
+          : { keywords: this.normalizeKeywords(dto.keywords) }),
+        ...(dto.sortOrder === undefined ? {} : { sortOrder: dto.sortOrder }),
+        ...(dto.isActive === undefined ? {} : { isActive: dto.isActive }),
+      },
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+            isActive: true,
+            sortOrder: true,
+          },
+        },
+      },
+    });
+  }
+
+  async deactivateFaq(user: AuthenticatedUser, id: string) {
+    this.assertAgent(user);
+    await this.ensureFaqExists(id);
+
+    return this.prisma.faq.update({
+      where: { id },
+      data: { isActive: false },
+    });
+  }
 
   async listTickets(user: AuthenticatedUser, query: AdminListTicketsDto) {
     this.assertAgent(user);
@@ -210,6 +431,34 @@ export class AdminService {
     });
 
     return updatedTicket;
+  }
+
+  private async ensureFaqCategoryExists(id: string) {
+    const category = await this.prisma.faqCategory.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+
+    if (!category) {
+      throw new NotFoundException('FAQ category not found');
+    }
+  }
+
+  private async ensureFaqExists(id: string) {
+    const faq = await this.prisma.faq.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+
+    if (!faq) {
+      throw new NotFoundException('FAQ not found');
+    }
+  }
+
+  private normalizeKeywords(keywords: string[] | undefined) {
+    return [...new Set((keywords ?? []).map((keyword) => keyword.trim()))].filter(
+      Boolean,
+    );
   }
 
   private assertAgent(user: AuthenticatedUser) {

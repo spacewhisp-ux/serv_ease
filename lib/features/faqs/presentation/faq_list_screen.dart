@@ -138,6 +138,7 @@ class _CategoryChip extends StatelessWidget {
       label: Text(label),
       selected: selected,
       selectedColor: AppTheme.expoBlack,
+      checkmarkColor: AppTheme.pureWhite,
       labelStyle: TextStyle(
         color: selected ? AppTheme.pureWhite : AppTheme.nearBlack,
       ),

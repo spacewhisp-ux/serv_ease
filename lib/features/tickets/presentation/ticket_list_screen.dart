@@ -239,11 +239,18 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     const SizedBox(height: 16),
                     DropdownButtonFormField<String>(
                       initialValue: _category,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: AppTheme.nearBlack,
+                      ),
                       items: categoryOptions
                           .map(
                             (category) => DropdownMenuItem(
                               value: category.value,
-                              child: Text(category.label),
+                              child: Text(
+                                category.label,
+                                style: TextStyle(color: AppTheme.expoBlack),
+                              ),
                             ),
                           )
                           .toList(),
@@ -259,11 +266,18 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     const SizedBox(height: 16),
                     DropdownButtonFormField<String>(
                       initialValue: _priority,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: AppTheme.nearBlack,
+                      ),
                       items: priorityOptions
                           .map(
                             (priority) => DropdownMenuItem(
                               value: priority.value,
-                              child: Text(priority.label),
+                              child: Text(
+                                priority.label,
+                                style: TextStyle(color: AppTheme.expoBlack),
+                              ),
                             ),
                           )
                           .toList(),
@@ -646,8 +660,10 @@ class _StatusChip extends StatelessWidget {
       label: Text(label),
       selected: selected,
       selectedColor: AppTheme.expoBlack,
+      checkmarkColor: AppTheme.pureWhite,
       labelStyle: TextStyle(
         color: selected ? AppTheme.pureWhite : AppTheme.nearBlack,
+        fontWeight: FontWeight.w600,
       ),
       shape: const StadiumBorder(side: BorderSide(color: AppTheme.inputBorder)),
       onSelected: (_) => onSelected(),

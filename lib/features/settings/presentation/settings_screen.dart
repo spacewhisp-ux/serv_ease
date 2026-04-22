@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../app/app_theme.dart';
 import '../../../core/localization/app_localizations_x.dart';
 import '../../../core/localization/locale_cubit.dart';
 import '../../../core/widgets/surface_card.dart';
@@ -33,18 +34,28 @@ class SettingsScreen extends StatelessWidget {
                     const SizedBox(height: 20),
                     DropdownButtonFormField<String>(
                       initialValue: state.locale?.languageCode,
+                      style: TextStyle(fontSize: 16, color: AppTheme.nearBlack),
                       items: [
                         DropdownMenuItem<String>(
                           value: null,
-                          child: Text(context.l10n.languageSystem),
+                          child: Text(
+                            context.l10n.languageSystem,
+                            style: TextStyle(color: AppTheme.expoBlack),
+                          ),
                         ),
                         DropdownMenuItem<String>(
                           value: 'en',
-                          child: Text(context.l10n.languageEnglish),
+                          child: Text(
+                            context.l10n.languageEnglish,
+                            style: TextStyle(color: AppTheme.expoBlack),
+                          ),
                         ),
                         DropdownMenuItem<String>(
                           value: 'zh',
-                          child: Text(context.l10n.languageChinese),
+                          child: Text(
+                            context.l10n.languageChinese,
+                            style: TextStyle(color: AppTheme.expoBlack),
+                          ),
                         ),
                       ],
                       onChanged: (value) {

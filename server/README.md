@@ -95,6 +95,17 @@ curl http://localhost:3001/v1/health
 - `GET /v1/faqs`
 - `GET /v1/faqs/:id`
 
+### Admin FAQ
+- `GET /v1/admin/faq-categories`
+- `POST /v1/admin/faq-categories`
+- `PATCH /v1/admin/faq-categories/:id`
+- `DELETE /v1/admin/faq-categories/:id`
+- `GET /v1/admin/faqs`
+- `GET /v1/admin/faqs/:id`
+- `POST /v1/admin/faqs`
+- `PATCH /v1/admin/faqs/:id`
+- `DELETE /v1/admin/faqs/:id`
+
 ### Tickets
 - `POST /v1/tickets`
 - `GET /v1/tickets`

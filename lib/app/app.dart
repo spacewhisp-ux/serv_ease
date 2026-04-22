@@ -7,6 +7,8 @@ import '../core/localization/locale_cubit.dart';
 import '../core/network/api_client.dart';
 import '../core/session/session_cubit.dart';
 import '../core/session/session_store.dart';
+import '../features/admin_faqs/data/admin_faq_repository.dart';
+import '../features/admin_faqs/presentation/admin_faq_cubit.dart';
 import '../features/auth/data/auth_repository.dart';
 import '../features/auth/presentation/login_cubit.dart';
 import '../features/auth/presentation/login_screen.dart';
@@ -32,6 +34,7 @@ class _ServEaseAppState extends State<ServEaseApp> {
   late final SessionStore _sessionStore;
   late final ApiClient _apiClient;
   late final AuthRepository _authRepository;
+  late final AdminFaqRepository _adminFaqRepository;
   late final FaqRepository _faqRepository;
   late final TicketRepository _ticketRepository;
   late final NotificationsRepository _notificationsRepository;
@@ -45,6 +48,7 @@ class _ServEaseAppState extends State<ServEaseApp> {
       apiClient: _apiClient,
       sessionStore: _sessionStore,
     );
+    _adminFaqRepository = AdminFaqRepository(apiClient: _apiClient);
     _faqRepository = FaqRepository(apiClient: _apiClient);
     _ticketRepository = TicketRepository(apiClient: _apiClient);
     _notificationsRepository = NotificationsRepository(apiClient: _apiClient);
@@ -57,6 +61,9 @@ class _ServEaseAppState extends State<ServEaseApp> {
         RepositoryProvider<SessionStore>.value(value: _sessionStore),
         RepositoryProvider<ApiClient>.value(value: _apiClient),
         RepositoryProvider<AuthRepository>.value(value: _authRepository),
+        RepositoryProvider<AdminFaqRepository>.value(
+          value: _adminFaqRepository,
+        ),
         RepositoryProvider<FaqRepository>.value(value: _faqRepository),
         RepositoryProvider<TicketRepository>.value(value: _ticketRepository),
         RepositoryProvider<NotificationsRepository>.value(
@@ -77,6 +84,10 @@ class _ServEaseAppState extends State<ServEaseApp> {
           ),
           BlocProvider(
             create: (_) => LoginCubit(authRepository: _authRepository),
+          ),
+          BlocProvider(
+            create: (_) =>
+                AdminFaqCubit(adminFaqRepository: _adminFaqRepository),
           ),
           BlocProvider(
             create: (_) => FaqListCubit(faqRepository: _faqRepository),

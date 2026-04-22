@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../core/localization/app_localizations_x.dart';
 import '../core/session/session_cubit.dart';
+import '../features/admin_faqs/presentation/admin_faq_management_screen.dart';
 import '../features/faqs/presentation/faq_list_screen.dart';
 import '../features/notifications/presentation/notifications_cubit.dart';
 import '../features/notifications/presentation/notifications_screen.dart';
@@ -23,6 +24,10 @@ class _AppShellState extends State<AppShell> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final role = context.select<SessionCubit, String?>(
+      (cubit) => cubit.state.user?['role'] as String?,
+    );
+    final canManageFaqs = role == 'AGENT' || role == 'ADMIN';
     final titles = [l10n.navFaqs, l10n.navTickets, l10n.navAlerts];
     final unreadCount = context.select<NotificationsCubit, int>(
       (cubit) => cubit.state.unreadCount,
@@ -35,6 +40,15 @@ class _AppShellState extends State<AppShell> {
           PopupMenuButton<String>(
             color: AppTheme.pureWhite,
             onSelected: (value) {
+              if (value == 'adminFaqs') {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const AdminFaqManagementScreen(),
+                  ),
+                );
+                return;
+              }
+
               if (value == 'settings') {
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (_) => const SettingsScreen()),
@@ -47,6 +61,11 @@ class _AppShellState extends State<AppShell> {
               }
             },
             itemBuilder: (context) => [
+              if (canManageFaqs)
+                const PopupMenuItem<String>(
+                  value: 'adminFaqs',
+                  child: Text('FAQ management'),
+                ),
               PopupMenuItem<String>(
                 value: 'settings',
                 child: Text(context.l10n.menuSettings),

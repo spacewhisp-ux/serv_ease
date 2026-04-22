@@ -26,6 +26,9 @@ export class FaqsService {
 
     const where = {
       isActive: true,
+      category: {
+        isActive: true,
+      },
       ...(query.categoryId ? { categoryId: query.categoryId } : {}),
       ...(query.keyword
         ? {
@@ -92,6 +95,9 @@ export class FaqsService {
       where: {
         id,
         isActive: true,
+        category: {
+          isActive: true,
+        },
       },
       select: {
         id: true,
