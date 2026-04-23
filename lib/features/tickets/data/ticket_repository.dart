@@ -193,6 +193,7 @@ class TicketMessage {
     required this.type,
     required this.body,
     required this.createdAt,
+    required this.attachments,
   });
 
   factory TicketMessage.fromJson(Map<String, dynamic> json) {
@@ -204,6 +205,9 @@ class TicketMessage {
       createdAt:
           DateTime.tryParse(json['createdAt'] as String? ?? '') ??
           DateTime.fromMillisecondsSinceEpoch(0),
+      attachments: ((json['attachments'] as List<dynamic>?) ?? const [])
+          .map((item) => TicketAttachment.fromJson(item as Map<String, dynamic>))
+          .toList(),
     );
   }
 
@@ -212,6 +216,7 @@ class TicketMessage {
   final String type;
   final String body;
   final DateTime createdAt;
+  final List<TicketAttachment> attachments;
 }
 
 class TicketAttachment {
@@ -221,6 +226,7 @@ class TicketAttachment {
     required this.mimeType,
     required this.fileSize,
     required this.createdAt,
+    this.messageId,
   });
 
   factory TicketAttachment.fromJson(Map<String, dynamic> json) {
@@ -232,6 +238,7 @@ class TicketAttachment {
       createdAt:
           DateTime.tryParse(json['createdAt'] as String? ?? '') ??
           DateTime.fromMillisecondsSinceEpoch(0),
+      messageId: json['messageId'] as String?,
     );
   }
 
@@ -240,6 +247,7 @@ class TicketAttachment {
   final String mimeType;
   final int fileSize;
   final DateTime createdAt;
+  final String? messageId;
 }
 
 class TicketListResult {

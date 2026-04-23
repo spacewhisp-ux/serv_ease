@@ -8,6 +8,7 @@ import '../../../core/widgets/empty_state_card.dart';
 import '../../../core/widgets/primary_pill_button.dart';
 import '../../../core/widgets/surface_card.dart';
 import '../data/notifications_repository.dart';
+import '../../tickets/presentation/ticket_list_screen.dart';
 import 'notifications_cubit.dart';
 
 class NotificationsScreen extends StatefulWidget {
@@ -118,11 +119,25 @@ class _NotificationCard extends StatelessWidget {
     return SurfaceCard(
       child: InkWell(
         borderRadius: BorderRadius.circular(18),
-        onTap: notification.isRead
-            ? null
-            : () => context.read<NotificationsCubit>().markAsRead(
-                notification.id,
-              ),
+        onTap: () async {
+          if (!notification.isRead) {
+            await context.read<NotificationsCubit>().markAsRead(notification.id);
+            if (!context.mounted) {
+              return;
+            }
+          }
+
+          final ticketId = notification.ticketId;
+          if (ticketId == null || ticketId.isEmpty) {
+            return;
+          }
+
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => TicketDetailScreen(ticketId: ticketId),
+            ),
+          );
+        },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

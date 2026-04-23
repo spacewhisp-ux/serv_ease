@@ -10,6 +10,7 @@ import '../../../core/widgets/surface_card.dart';
 import '../../../l10n/app_localizations.dart';
 import '../data/ticket_repository.dart';
 import 'create_ticket_cubit.dart';
+import 'ticket_detail_cubit.dart';
 import 'ticket_list_cubit.dart';
 
 class TicketListScreen extends StatefulWidget {
@@ -103,13 +104,27 @@ class _TicketListScreenState extends State<TicketListScreen> {
                     title: l10n.ticketEmptyTitle,
                     description: l10n.ticketEmptyDescription,
                   )
-                else
+                else ...[
                   ...state.items.map(
                     (ticket) => Padding(
                       padding: const EdgeInsets.only(bottom: 12),
                       child: _TicketCard(ticket: ticket),
                     ),
                   ),
+                  if (state.isLoadingMore)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: Center(child: CircularProgressIndicator()),
+                    )
+                  else if (state.hasMore)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: PrimaryPillButton(
+                        label: 'Load more',
+                        onPressed: () => context.read<TicketListCubit>().loadMore(),
+                      ),
+                    ),
+                ],
               ],
             ),
           ),
@@ -132,12 +147,15 @@ class _TicketCard extends StatelessWidget {
     return SurfaceCard(
       child: InkWell(
         borderRadius: BorderRadius.circular(18),
-        onTap: () {
-          Navigator.of(context).push(
+        onTap: () async {
+          await Navigator.of(context).push(
             MaterialPageRoute(
               builder: (_) => TicketDetailScreen(ticketId: ticket.id),
             ),
           );
+          if (context.mounted) {
+            await context.read<TicketListCubit>().load();
+          }
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -331,84 +349,98 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   }
 }
 
-class TicketDetailScreen extends StatefulWidget {
+class TicketDetailScreen extends StatelessWidget {
   const TicketDetailScreen({super.key, required this.ticketId});
 
   final String ticketId;
 
   @override
-  State<TicketDetailScreen> createState() => _TicketDetailScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => TicketDetailCubit(
+        ticketRepository: context.read<TicketRepository>(),
+      )..load(ticketId),
+      child: _TicketDetailView(ticketId: ticketId),
+    );
+  }
 }
 
-class _TicketDetailScreenState extends State<TicketDetailScreen> {
-  late Future<TicketDetail> _detailFuture;
+class _TicketDetailView extends StatefulWidget {
+  const _TicketDetailView({required this.ticketId});
+
+  final String ticketId;
+
+  @override
+  State<_TicketDetailView> createState() => _TicketDetailViewState();
+}
+
+class _TicketDetailViewState extends State<_TicketDetailView> {
   final _replyController = TextEditingController();
-  bool _isSubmittingReply = false;
-  bool _isClosingTicket = false;
 
   @override
   void initState() {
     super.initState();
-    _detailFuture = _loadDetail();
+    _replyController.addListener(_handleDraftChanged);
   }
 
   @override
   void dispose() {
+    _replyController.removeListener(_handleDraftChanged);
     _replyController.dispose();
     super.dispose();
   }
 
-  Future<TicketDetail> _loadDetail() {
-    return context.read<TicketRepository>().fetchTicketDetail(widget.ticketId);
+  void _handleDraftChanged() {
+    context.read<TicketDetailCubit>().updateReplyDraft(_replyController.text);
   }
 
-  Future<void> _refresh() async {
-    final next = _loadDetail();
-    setState(() {
-      _detailFuture = next;
-    });
-    await next;
+  Future<void> _refresh() {
+    return context.read<TicketDetailCubit>().load(widget.ticketId);
   }
 
   Future<void> _submitReply() async {
-    final body = _replyController.text.trim();
-    if (body.isEmpty || _isSubmittingReply) {
+    final cubit = context.read<TicketDetailCubit>();
+    final success = await cubit.submitReply(widget.ticketId);
+    if (!mounted) {
       return;
     }
 
-    setState(() => _isSubmittingReply = true);
-    try {
-      await context.read<TicketRepository>().replyTicket(
-        ticketId: widget.ticketId,
-        body: body,
-      );
-      _replyController.clear();
-      await _refresh();
-    } finally {
-      if (mounted) {
-        setState(() => _isSubmittingReply = false);
-      }
+    final messenger = ScaffoldMessenger.of(context);
+    if (success) {
+      messenger.showSnackBar(const SnackBar(content: Text('Reply sent')));
+      await context.read<TicketListCubit>().load();
+      return;
+    }
+
+    if (cubit.state.errorMessage != null) {
+      messenger.showSnackBar(SnackBar(content: Text(cubit.state.errorMessage!)));
     }
   }
 
   Future<void> _closeTicket() async {
-    if (_isClosingTicket) {
+    final request = await _showCloseTicketDialog(context);
+    if (request == null || !mounted) {
       return;
     }
 
-    setState(() => _isClosingTicket = true);
-    try {
-      await context.read<TicketRepository>().closeTicket(
-        ticketId: widget.ticketId,
-      );
-      await _refresh();
-      if (mounted) {
-        await context.read<TicketListCubit>().load();
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _isClosingTicket = false);
-      }
+    final cubit = context.read<TicketDetailCubit>();
+    final success = await cubit.closeTicket(
+      widget.ticketId,
+      reason: request.reason,
+    );
+    if (!mounted) {
+      return;
+    }
+
+    final messenger = ScaffoldMessenger.of(context);
+    if (success) {
+      messenger.showSnackBar(const SnackBar(content: Text('Ticket closed')));
+      await context.read<TicketListCubit>().load();
+      return;
+    }
+
+    if (cubit.state.errorMessage != null) {
+      messenger.showSnackBar(SnackBar(content: Text(cubit.state.errorMessage!)));
     }
   }
 
@@ -418,178 +450,210 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
       Localizations.localeOf(context).toLanguageTag(),
     ).add_Hm();
     final l10n = context.l10n;
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.ticketDetailTitle)),
-      body: FutureBuilder<TicketDetail>(
-        future: _detailFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
 
-          if (snapshot.hasError) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: EmptyStateCard(
-                  title: l10n.ticketDetailLoadFailed,
-                  description: snapshot.error.toString(),
-                ),
-              ),
-            );
-          }
+    return BlocBuilder<TicketDetailCubit, TicketDetailState>(
+      builder: (context, state) {
+        if (_replyController.text != state.replyDraft) {
+          _replyController.value = TextEditingValue(
+            text: state.replyDraft,
+            selection: TextSelection.collapsed(offset: state.replyDraft.length),
+          );
+        }
 
-          final ticket = snapshot.data;
-          if (ticket == null) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: EmptyStateCard(
-                  title: l10n.ticketNotFound,
-                  description: l10n.ticketNotFoundDescription,
-                ),
-              ),
-            );
-          }
+        return Scaffold(
+          appBar: AppBar(title: Text(l10n.ticketDetailTitle)),
+          body: Builder(
+            builder: (context) {
+              if (state.status == TicketDetailStatus.loading && state.ticket == null) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-          final canReply = ticket.status != 'CLOSED';
-
-          return RefreshIndicator(
-            onRefresh: _refresh,
-            child: ListView(
-              padding: const EdgeInsets.all(24),
-              children: [
-                SurfaceCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              ticket.subject,
-                              style: Theme.of(context).textTheme.headlineMedium,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          _Tag(
-                            label: _ticketStatusLabel(context, ticket.status),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        '${ticket.ticketNo} • ${_ticketCategoryLabel(context, ticket.category)}',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        ticket.description,
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          _MetaLabel(
-                            label: _ticketPriorityLabel(
-                              context,
-                              ticket.priority,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              l10n.ticketOpenedAt(
-                                formatter.format(ticket.createdAt.toLocal()),
-                              ),
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                          ),
-                        ],
-                      ),
-                      if (canReply) ...[
-                        const SizedBox(height: 20),
-                        PrimaryPillButton(
-                          label: l10n.ticketClose,
-                          isLoading: _isClosingTicket,
-                          onPressed: _closeTicket,
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  l10n.ticketConversation,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                const SizedBox(height: 12),
-                ...ticket.messages.map(
-                  (message) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: _MessageBubble(message: message),
-                  ),
-                ),
-                if (ticket.attachments.isNotEmpty) ...[
-                  const SizedBox(height: 12),
-                  SurfaceCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l10n.ticketAttachments,
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        const SizedBox(height: 12),
-                        ...ticket.attachments.map(
-                          (attachment) => Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: Text(
-                              '${attachment.fileName} (${attachment.mimeType})',
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                          ),
-                        ),
-                      ],
+              if (state.status == TicketDetailStatus.failure && state.ticket == null) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: EmptyStateCard(
+                      title: l10n.ticketDetailLoadFailed,
+                      description: state.errorMessage ?? l10n.commonTryAgain,
                     ),
                   ),
-                ],
-                const SizedBox(height: 16),
-                SurfaceCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        canReply
-                            ? l10n.ticketSendReply
-                            : l10n.ticketClosedState,
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                      const SizedBox(height: 12),
-                      TextField(
-                        controller: _replyController,
-                        minLines: 4,
-                        maxLines: 6,
-                        enabled: canReply,
-                        decoration: InputDecoration(
-                          labelText: l10n.ticketReplyHint,
-                          alignLabelWithHint: true,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      PrimaryPillButton(
-                        label: l10n.ticketReplyAction,
-                        isLoading: _isSubmittingReply,
-                        onPressed: canReply ? _submitReply : null,
-                      ),
-                    ],
+                );
+              }
+
+              final ticket = state.ticket;
+              if (ticket == null) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: EmptyStateCard(
+                      title: l10n.ticketNotFound,
+                      description: l10n.ticketNotFoundDescription,
+                    ),
                   ),
+                );
+              }
+
+              final canReply = state.canReply;
+              final ticketLevelAttachments = ticket.attachments
+                  .where((attachment) => attachment.messageId == null)
+                  .toList();
+
+              return RefreshIndicator(
+                onRefresh: _refresh,
+                child: ListView(
+                  padding: const EdgeInsets.all(24),
+                  children: [
+                    SurfaceCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  ticket.subject,
+                                  style: Theme.of(context).textTheme.headlineMedium,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              _Tag(
+                                label: _ticketStatusLabel(context, ticket.status),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            '${ticket.ticketNo} • ${_ticketCategoryLabel(context, ticket.category)}',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            ticket.description,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                          if (ticketLevelAttachments.isNotEmpty) ...[
+                            const SizedBox(height: 16),
+                            _AttachmentSection(attachments: ticketLevelAttachments),
+                          ],
+                          const SizedBox(height: 16),
+                          Row(
+                            children: [
+                              _MetaLabel(
+                                label: _ticketPriorityLabel(
+                                  context,
+                                  ticket.priority,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  l10n.ticketOpenedAt(
+                                    formatter.format(ticket.createdAt.toLocal()),
+                                  ),
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ),
+                            ],
+                          ),
+                          if (canReply) ...[
+                            const SizedBox(height: 20),
+                            PrimaryPillButton(
+                              label: l10n.ticketClose,
+                              isLoading: state.isClosingTicket,
+                              onPressed: _closeTicket,
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      l10n.ticketConversation,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const SizedBox(height: 12),
+                    ...ticket.messages.map(
+                      (message) => Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: _MessageBubble(message: message),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    SurfaceCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            canReply
+                                ? l10n.ticketSendReply
+                                : l10n.ticketClosedState,
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          const SizedBox(height: 12),
+                          TextField(
+                            controller: _replyController,
+                            minLines: 4,
+                            maxLines: 6,
+                            enabled: canReply,
+                            decoration: InputDecoration(
+                              labelText: l10n.ticketReplyHint,
+                              alignLabelWithHint: true,
+                            ),
+                          ),
+                          if (state.errorMessage != null) ...[
+                            const SizedBox(height: 12),
+                            Text(
+                              state.errorMessage!,
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: Colors.redAccent,
+                              ),
+                            ),
+                          ],
+                          const SizedBox(height: 16),
+                          PrimaryPillButton(
+                            label: l10n.ticketReplyAction,
+                            isLoading: state.isSubmittingReply,
+                            onPressed: canReply ? _submitReply : null,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _AttachmentSection extends StatelessWidget {
+  const _AttachmentSection({required this.attachments});
+
+  final List<TicketAttachment> attachments;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          context.l10n.ticketAttachments,
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        const SizedBox(height: 12),
+        ...attachments.map(
+          (attachment) => Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text(
+              '${attachment.fileName} (${attachment.mimeType})',
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
-          );
-        },
-      ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -604,6 +668,10 @@ class _MessageBubble extends StatelessWidget {
     final isUser = message.senderRole == 'USER';
     final backgroundColor = isUser ? AppTheme.expoBlack : AppTheme.pureWhite;
     final foregroundColor = isUser ? AppTheme.pureWhite : AppTheme.nearBlack;
+    final timeLabel = DateFormat.Hm(
+      Localizations.localeOf(context).toLanguageTag(),
+    ).format(message.createdAt.toLocal());
+
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: ConstrainedBox(
@@ -633,6 +701,28 @@ class _MessageBubble extends StatelessWidget {
                   style: Theme.of(
                     context,
                   ).textTheme.bodyLarge?.copyWith(color: foregroundColor),
+                ),
+                if (message.attachments.isNotEmpty) ...[
+                  const SizedBox(height: 12),
+                  ...message.attachments.map(
+                    (attachment) => Padding(
+                      padding: const EdgeInsets.only(bottom: 6),
+                      child: Text(
+                        attachment.fileName,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: isUser ? Colors.white70 : AppTheme.slateGray,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 6),
+                Text(
+                  timeLabel,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: isUser ? Colors.white70 : AppTheme.slateGray,
+                    fontSize: 12,
+                  ),
                 ),
               ],
             ),
@@ -727,6 +817,47 @@ class _TicketCategoryOption {
 
   final String label;
   final String value;
+}
+
+class _CloseTicketRequest {
+  const _CloseTicketRequest({required this.reason});
+
+  final String reason;
+}
+
+Future<_CloseTicketRequest?> _showCloseTicketDialog(BuildContext context) async {
+  final controller = TextEditingController();
+  final result = await showDialog<_CloseTicketRequest>(
+    context: context,
+    builder: (dialogContext) {
+      return AlertDialog(
+        title: Text(context.l10n.ticketClose),
+        content: TextField(
+          controller: controller,
+          minLines: 2,
+          maxLines: 4,
+          decoration: const InputDecoration(
+            labelText: 'Reason (optional)',
+            alignLabelWithHint: true,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(
+              _CloseTicketRequest(reason: controller.text.trim()),
+            ),
+            child: Text(context.l10n.ticketClose),
+          ),
+        ],
+      );
+    },
+  );
+  controller.dispose();
+  return result;
 }
 
 List<_TicketStatusOption> _ticketStatuses(AppLocalizations l10n) => [

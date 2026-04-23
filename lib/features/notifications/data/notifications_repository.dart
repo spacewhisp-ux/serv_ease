@@ -44,6 +44,7 @@ class AppNotification {
     required this.type,
     required this.title,
     required this.body,
+    required this.data,
     required this.readAt,
     required this.createdAt,
   });
@@ -54,6 +55,7 @@ class AppNotification {
       type: json['type'] as String? ?? 'SYSTEM',
       title: json['title'] as String? ?? '',
       body: json['body'] as String? ?? '',
+      data: (json['data'] as Map<String, dynamic>?) ?? const {},
       readAt: json['readAt'] == null
           ? null
           : DateTime.tryParse(json['readAt'] as String),
@@ -67,9 +69,11 @@ class AppNotification {
   final String type;
   final String title;
   final String body;
+  final Map<String, dynamic> data;
   final DateTime? readAt;
   final DateTime createdAt;
 
+  String? get ticketId => data['ticketId'] as String?;
   bool get isRead => readAt != null;
 }
 

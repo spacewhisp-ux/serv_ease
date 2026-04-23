@@ -5,6 +5,7 @@ import {
   LogoutOutlined,
   UserOutlined,
   FileSearchOutlined,
+  MessageOutlined,
 } from '@ant-design/icons';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
@@ -23,13 +24,16 @@ export function AdminLayout() {
 
   const selectedKey = location.pathname.startsWith('/categories')
     ? 'categories'
-    : location.pathname.startsWith('/logs')
-      ? 'logs'
-      : 'faqs';
+    : location.pathname.startsWith('/tickets')
+      ? 'tickets'
+      : location.pathname.startsWith('/logs')
+        ? 'logs'
+        : 'faqs';
 
   const menuItems = [
     { key: 'faqs', icon: <FileTextOutlined />, label: 'FAQs' },
     { key: 'categories', icon: <FolderOpenOutlined />, label: 'FAQ Categories' },
+    { key: 'tickets', icon: <MessageOutlined />, label: 'Tickets' },
     { key: 'logs', icon: <FileSearchOutlined />, label: 'Access Logs' },
   ];
 
@@ -48,6 +52,7 @@ export function AdminLayout() {
           onClick={({ key }) => {
             const routeMap: Record<string, string> = {
               categories: '/categories',
+              tickets: '/tickets',
               logs: '/logs',
             };
             navigate(routeMap[key] ?? '/faqs');
@@ -68,9 +73,11 @@ export function AdminLayout() {
           <Typography.Text strong>
             {selectedKey === 'categories'
               ? 'FAQ Categories'
-              : selectedKey === 'logs'
-                ? 'Access Logs'
-                : 'FAQs'}
+              : selectedKey === 'tickets'
+                ? 'Tickets'
+                : selectedKey === 'logs'
+                  ? 'Access Logs'
+                  : 'FAQs'}
           </Typography.Text>
           <Dropdown
             menu={{

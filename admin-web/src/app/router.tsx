@@ -8,6 +8,8 @@ import { CategoryListPage } from '../modules/faq-categories/CategoryListPage';
 import { FaqFormPage } from '../modules/faqs/FaqFormPage';
 import { FaqListPage } from '../modules/faqs/FaqListPage';
 import { LogListPage } from '../modules/logs/LogListPage';
+import { TicketDetailPage } from '../modules/tickets/TicketDetailPage';
+import { TicketListPage } from '../modules/tickets/TicketListPage';
 
 export const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
@@ -24,6 +26,8 @@ export const router = createBrowserRouter([
           { path: '/categories', element: <CategoryListPage /> },
           { path: '/categories/new', element: <CategoryFormPage /> },
           { path: '/categories/:id/edit', element: <CategoryFormPage /> },
+          { path: '/tickets', element: <TicketListPage /> },
+          { path: '/tickets/:id', element: <TicketDetailPage /> },
           { path: '/logs', element: <LogListPage /> },
         ],
       },
