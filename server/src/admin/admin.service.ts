@@ -4,11 +4,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma, TicketStatus } from '@prisma/client';
+import { Prisma, TicketStatus, TicketHistoryAction, TicketHistoryActorRole } from '@prisma/client';
 
 import { AuthenticatedUser } from '../auth/authenticated-user.interface';
 import { NotificationsService } from '../notifications/notifications.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { TicketHistoryService } from '../tickets/ticket-history.service';
 import { AdminListFaqCategoriesDto } from './dto/admin-list-faq-categories.dto';
 import { AdminListFaqsDto } from './dto/admin-list-faqs.dto';
 import { AdminListTicketsDto } from './dto/admin-list-tickets.dto';
@@ -25,6 +26,7 @@ export class AdminService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly notificationsService: NotificationsService,
+    private readonly ticketHistoryService: TicketHistoryService,
   ) {}
 
   async listAssignableAgents(user: AuthenticatedUser) {
@@ -266,9 +268,38 @@ export class AdminService {
     const page = query.page ?? 1;
     const pageSize = query.pageSize ?? 20;
     const skip = (page - 1) * pageSize;
-    const where = {
+    const trimmedKeyword = query.keyword?.trim();
+    const where: Prisma.TicketWhereInput = {
       ...(query.status ? { status: query.status } : {}),
       ...(query.assignedAgentId ? { assignedAgentId: query.assignedAgentId } : {}),
+      ...(query.priority ? { priority: query.priority } : {}),
+      ...(query.category ? { category: query.category } : {}),
+      ...(trimmedKeyword
+        ? {
+            OR: [
+              {
+                ticketNo: {
+                  contains: trimmedKeyword,
+                  mode: 'insensitive',
+                },
+              },
+              {
+                subject: {
+                  contains: trimmedKeyword,
+                  mode: 'insensitive',
+                },
+              },
+              {
+                user: {
+                  email: {
+                    contains: trimmedKeyword,
+                    mode: 'insensitive',
+                  },
+                },
+              },
+            ],
+          }
+        : {}),
     };
 
     const [items, total] = await Promise.all([
@@ -412,6 +443,7 @@ export class AdminService {
         ticketNo: true,
         userId: true,
         status: true,
+        assignedAgentId: true,
       },
     });
     if (!ticket) {
@@ -447,6 +479,15 @@ export class AdminService {
         status: true,
         updatedAt: true,
       },
+    });
+
+    await this.ticketHistoryService.createHistory({
+      ticketId: id,
+      action: ticket.assignedAgentId ? TicketHistoryAction.REASSIGNED : TicketHistoryAction.ASSIGNED,
+      actorId: user.id,
+      actorRole: user.role as TicketHistoryActorRole,
+      oldValue: ticket.assignedAgentId || undefined,
+      newValue: dto.agentId,
     });
 
     await this.notificationsService.createNotification({
@@ -528,6 +569,15 @@ export class AdminService {
       });
     }
 
+    if (!(dto.isInternal ?? false)) {
+      await this.ticketHistoryService.createHistory({
+        ticketId: id,
+        action: TicketHistoryAction.REPLIED,
+        actorId: user.id,
+        actorRole: user.role as TicketHistoryActorRole,
+      });
+    }
+
     return message;
   }
 
@@ -570,6 +620,15 @@ export class AdminService {
       },
     });
 
+    await this.ticketHistoryService.createHistory({
+      ticketId: id,
+      action: TicketHistoryAction.STATUS_CHANGED,
+      actorId: user.id,
+      actorRole: user.role as TicketHistoryActorRole,
+      oldValue: ticket.status,
+      newValue: dto.status,
+    });
+
     await this.notificationsService.createNotification({
       userId: ticket.userId,
       type: 'TICKET_UPDATED',
@@ -579,6 +638,21 @@ export class AdminService {
     });
 
     return updatedTicket;
+  }
+
+  async getTicketHistory(user: AuthenticatedUser, id: string) {
+    this.assertAgent(user);
+
+    const ticket = await this.prisma.ticket.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+
+    if (!ticket) {
+      throw new NotFoundException('Ticket not found');
+    }
+
+    return this.ticketHistoryService.getTicketHistory(id);
   }
 
   private async ensureFaqCategoryExists(id: string) {

@@ -57,6 +57,25 @@ enum NotificationType {
   SYSTEM
 }
 
+enum TicketHistoryAction {
+  CREATED
+  STATUS_CHANGED
+  ASSIGNED
+  REASSIGNED
+  PRIORITY_CHANGED
+  CATEGORY_CHANGED
+  REPLIED
+  CLOSED
+  REOPENED
+}
+
+enum TicketHistoryActorRole {
+  USER
+  AGENT
+  ADMIN
+  SYSTEM
+}
+
 model User {
   id               String          @id @default(uuid()) @db.Uuid
   email            String?         @unique @db.VarChar(255)
@@ -77,6 +96,7 @@ model User {
   ticketAttachments TicketAttachment[]
   notifications    Notification[]
   pushDevices      PushDevice[]
+  ticketHistories  TicketHistory[]
 
   @@index([role])
   @@index([status])
@@ -149,6 +169,7 @@ model Ticket {
   assignedAgent   User?              @relation("AssignedAgent", fields: [assignedAgentId], references: [id], onDelete: SetNull)
   messages        TicketMessage[]
   attachments     TicketAttachment[]
+  histories       TicketHistory[]
 
   @@index([userId, status])
   @@index([assignedAgentId, status])
@@ -227,4 +248,22 @@ model PushDevice {
   @@index([userId])
   @@index([pushToken])
   @@map("push_devices")
+}
+
+model TicketHistory {
+  id         String                 @id @default(uuid()) @db.Uuid
+  ticketId   String                 @map("ticket_id") @db.Uuid
+  action     TicketHistoryAction
+  actorId    String?                @map("actor_id") @db.Uuid
+  actorRole  TicketHistoryActorRole @map("actor_role")
+  oldValue   String?                @map("old_value") @db.Text
+  newValue   String?                @map("new_value") @db.Text
+  metadata   Json?                  @db.JsonB
+  createdAt  DateTime               @default(now()) @map("created_at")
+  ticket     Ticket                 @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  actor      User?                  @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([ticketId])
+  @@index([createdAt])
+  @@map("ticket_histories")
 }

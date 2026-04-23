@@ -151,6 +151,14 @@ export class AdminController {
     return this.adminService.updateTicketStatus(user, id, dto);
   }
 
+  @Get('tickets/:id/history')
+  getTicketHistory(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id') id: string,
+  ) {
+    return this.adminService.getTicketHistory(user, id);
+  }
+
   // ─── Access Logs ────────────────────────────────────────────
 
   @Get('logs/dates')

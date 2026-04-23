@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { TicketStatus } from '@prisma/client';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { TicketStatus, TicketHistoryAction, TicketHistoryActorRole } from '@prisma/client';
 
 import { NotificationsService } from '../notifications/notifications.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { TicketHistoryService } from './ticket-history.service';
 import { CloseTicketDto } from './dto/close-ticket.dto';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { ListTicketsDto } from './dto/list-tickets.dto';
@@ -13,6 +14,7 @@ export class TicketsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly notificationsService: NotificationsService,
+    private readonly ticketHistoryService: TicketHistoryService,
   ) {}
 
   async createTicket(userId: string, dto: CreateTicketDto) {
@@ -57,6 +59,13 @@ export class TicketsService {
         data: { ticketId: ticket.id },
       });
     }
+
+    await this.ticketHistoryService.createHistory({
+      ticketId: ticket.id,
+      action: TicketHistoryAction.CREATED,
+      actorId: userId,
+      actorRole: TicketHistoryActorRole.USER,
+    });
 
     return ticket;
   }
@@ -172,6 +181,10 @@ export class TicketsService {
       throw new NotFoundException('Ticket not found');
     }
 
+    if (ticket.status === TicketStatus.CLOSED) {
+      throw new BadRequestException('Closed tickets cannot be replied to');
+    }
+
     const message = await this.prisma.ticketMessage.create({
       data: {
         ticketId: id,
@@ -192,7 +205,6 @@ export class TicketsService {
     await this.prisma.ticket.update({
       where: { id },
       data: {
-        status: ticket.status === TicketStatus.CLOSED ? TicketStatus.OPEN : ticket.status,
         lastMessageAt: now,
       },
     });
@@ -218,6 +230,13 @@ export class TicketsService {
         data: { ticketId: id, ticketNo: ticket.ticketNo },
       });
     }
+
+    await this.ticketHistoryService.createHistory({
+      ticketId: id,
+      action: TicketHistoryAction.REPLIED,
+      actorId: userId,
+      actorRole: TicketHistoryActorRole.USER,
+    });
 
     return {
       messageId: message.id,
@@ -274,6 +293,14 @@ export class TicketsService {
         data: { ticketId: id, ticketNo: ticket.ticketNo },
       });
     }
+
+    await this.ticketHistoryService.createHistory({
+      ticketId: id,
+      action: TicketHistoryAction.CLOSED,
+      actorId: userId,
+      actorRole: TicketHistoryActorRole.USER,
+      newValue: dto.reason,
+    });
 
     return {
       ...closedTicket,
