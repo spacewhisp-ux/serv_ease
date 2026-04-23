@@ -65,6 +65,9 @@ export interface TicketListQuery {
   pageSize: number;
   status?: TicketStatus;
   assignedAgentId?: string;
+  keyword?: string;
+  priority?: TicketPriority;
+  category?: string;
 }
 
 export interface ReplyTicketPayload {
@@ -76,6 +79,49 @@ export interface ReplyTicketPayload {
 export interface UpdateTicketStatusPayload {
   status: TicketStatus;
 }
+
+export type TicketHistoryAction =
+  | 'CREATED'
+  | 'STATUS_CHANGED'
+  | 'ASSIGNED'
+  | 'REASSIGNED'
+  | 'PRIORITY_CHANGED'
+  | 'CATEGORY_CHANGED'
+  | 'REPLIED'
+  | 'CLOSED'
+  | 'REOPENED';
+
+export type TicketHistoryActorRole = 'USER' | 'AGENT' | 'ADMIN' | 'SYSTEM';
+
+export interface TicketHistory {
+  id: string;
+  action: TicketHistoryAction;
+  actorRole: TicketHistoryActorRole;
+  oldValue?: string | null;
+  newValue?: string | null;
+  metadata?: Record<string, any> | null;
+  createdAt: string;
+  actor?: TicketAgent | null;
+}
+
+export const ticketHistoryActionLabels: Record<TicketHistoryAction, string> = {
+  CREATED: 'Created',
+  STATUS_CHANGED: 'Status Changed',
+  ASSIGNED: 'Assigned',
+  REASSIGNED: 'Reassigned',
+  PRIORITY_CHANGED: 'Priority Changed',
+  CATEGORY_CHANGED: 'Category Changed',
+  REPLIED: 'Replied',
+  CLOSED: 'Closed',
+  REOPENED: 'Reopened',
+};
+
+export const ticketPriorityLabels: Record<TicketPriority, string> = {
+  LOW: 'Low',
+  NORMAL: 'Normal',
+  HIGH: 'High',
+  URGENT: 'Urgent',
+};
 
 export const ticketStatuses: TicketStatus[] = [
   'OPEN',
@@ -130,5 +176,8 @@ export const ticketApi = {
   },
   updateStatus(id: string, payload: UpdateTicketStatusPayload) {
     return httpClient.patch<unknown, TicketRecord>(`/admin/tickets/${id}/status`, payload);
+  },
+  getHistory(id: string) {
+    return httpClient.get<unknown, TicketHistory[]>(`/admin/tickets/${id}/history`);
   },
 };

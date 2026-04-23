@@ -23,6 +23,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAuthStore } from '../auth/store';
 import {
   ticketApi,
+  ticketHistoryActionLabels,
   ticketPriorityColors,
   ticketStatusColors,
   ticketStatusLabels,
@@ -30,6 +31,7 @@ import {
   type ReplyTicketPayload,
   type TicketAttachment,
   type TicketDetail,
+  type TicketHistory,
   type TicketMessage,
   type TicketStatus,
 } from './api';
@@ -96,6 +98,26 @@ function MessageTitle({ item }: { item: TicketMessage }) {
   );
 }
 
+function HistoryItem({ item }: { item: TicketHistory }) {
+  const actor = item.actor ? formatIdentity(item.actor) : item.actorRole;
+
+  return (
+    <Space size={8} wrap>
+      <Tag color={item.actorRole === 'USER' ? 'blue' : item.actorRole === 'AGENT' ? 'purple' : item.actorRole === 'ADMIN' ? 'gold' : 'default'}>
+        {item.actorRole}
+      </Tag>
+      <Typography.Text strong>{ticketHistoryActionLabels[item.action]}</Typography.Text>
+      {item.oldValue || item.newValue ? (
+        <Typography.Text type="secondary">
+          {item.oldValue ? `"${item.oldValue}"` : ''} → {item.newValue ? `"${item.newValue}"` : ''}
+        </Typography.Text>
+      ) : null}
+      <Typography.Text type="secondary">by {actor}</Typography.Text>
+      <Typography.Text type="secondary">{new Date(item.createdAt).toLocaleString()}</Typography.Text>
+    </Space>
+  );
+}
+
 function TicketSummary({ ticket }: { ticket: TicketDetail }) {
   const ticketLevelAttachments = ticket.attachments.filter((attachment) => !attachment.messageId);
 
@@ -154,6 +176,11 @@ export function TicketDetailPage() {
     queryKey: ['assignable-agents'],
     queryFn: () => ticketApi.listAssignableAgents(),
   });
+  const historyQuery = useQuery({
+    queryKey: ['ticket-history', id],
+    enabled: Boolean(id),
+    queryFn: () => ticketApi.getHistory(id!),
+  });
 
   useEffect(() => {
     if (ticketQuery.data) {
@@ -166,6 +193,7 @@ export function TicketDetailPage() {
     await Promise.all([
       queryClient.invalidateQueries({ queryKey: ['ticket', id] }),
       queryClient.invalidateQueries({ queryKey: ['tickets'] }),
+      queryClient.invalidateQueries({ queryKey: ['ticket-history', id] }),
     ]);
   };
 
@@ -299,6 +327,18 @@ export function TicketDetailPage() {
           </Space>
         </Card>
       ) : null}
+
+      <Card title="History" loading={historyQuery.isLoading}>
+        {historyQuery.data && historyQuery.data.length ? (
+          <Timeline
+            items={historyQuery.data.map((item) => ({
+              children: <HistoryItem item={item} />,
+            }))}
+          />
+        ) : (
+          <Empty description="No history yet" />
+        )}
+      </Card>
 
       <Card title="Messages" loading={ticketQuery.isLoading}>
         {ticket && ticket.messages.length ? (

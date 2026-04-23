@@ -1,5 +1,5 @@
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, Card, Empty, Form, Select, Space, Table, Tag } from 'antd';
+import { Button, Card, Empty, Form, Input, Select, Space, Table, Tag } from 'antd';
 import type { TablePaginationConfig } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
@@ -9,10 +9,12 @@ import { useAuthStore } from '../auth/store';
 import {
   ticketApi,
   ticketPriorityColors,
+  ticketPriorityLabels,
   ticketStatusColors,
   ticketStatusLabels,
   ticketStatuses,
   type TicketListQuery,
+  type TicketPriority,
   type TicketRecord,
   type TicketStatus,
 } from './api';
@@ -22,6 +24,9 @@ type AssignmentFilter = 'all' | 'mine' | 'unassigned';
 interface FilterValues {
   status?: TicketStatus;
   assignment?: AssignmentFilter;
+  keyword?: string;
+  priority?: TicketPriority;
+  category?: string;
 }
 
 function formatAssignee(record: TicketRecord) {
@@ -54,6 +59,9 @@ export function TicketListPage() {
       pageSize: pagination.pageSize,
       status: filters.status,
       assignedAgentId: isMine ? currentUser.id : undefined,
+      keyword: filters.keyword?.trim() || undefined,
+      priority: filters.priority,
+      category: filters.category?.trim() || undefined,
     };
   }, [currentUser?.id, filters, pagination]);
 
@@ -89,6 +97,13 @@ export function TicketListPage() {
         }}
         style={{ marginBottom: 16 }}
       >
+        <Form.Item name="keyword">
+          <Input
+            placeholder="Search by ticket no, subject, or email"
+            style={{ width: 280 }}
+            allowClear
+          />
+        </Form.Item>
         <Form.Item name="status">
           <Select
             allowClear
@@ -98,6 +113,32 @@ export function TicketListPage() {
               value: status,
               label: ticketStatusLabels[status],
             }))}
+          />
+        </Form.Item>
+        <Form.Item name="priority">
+          <Select
+            allowClear
+            placeholder="Priority"
+            style={{ width: 140 }}
+            options={(['LOW', 'NORMAL', 'HIGH', 'URGENT'] as TicketPriority[]).map((priority) => ({
+              value: priority,
+              label: ticketPriorityLabels[priority],
+            }))}
+          />
+        </Form.Item>
+        <Form.Item name="category">
+          <Select
+            allowClear
+            placeholder="Category"
+            style={{ width: 160 }}
+            options={[
+              { value: 'GENERAL', label: 'General' },
+              { value: 'TECHNICAL', label: 'Technical' },
+              { value: 'BILLING', label: 'Billing' },
+              { value: 'FEATURE_REQUEST', label: 'Feature Request' },
+              { value: 'BUG_REPORT', label: 'Bug Report' },
+              { value: 'OTHER', label: 'Other' },
+            ]}
           />
         </Form.Item>
         <Form.Item name="assignment">
