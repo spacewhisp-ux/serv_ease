@@ -43,6 +43,10 @@ interface StatusFormValues {
   status: TicketStatus;
 }
 
+interface AssignmentFormValues {
+  agentId: string;
+}
+
 function formatIdentity(user?: { id: string; displayName?: string | null; email?: string | null; phone?: string | null } | null) {
   if (!user) {
     return '-';
@@ -139,18 +143,24 @@ export function TicketDetailPage() {
   const currentUser = useAuthStore((state) => state.user);
   const [replyForm] = Form.useForm<ReplyFormValues>();
   const [statusForm] = Form.useForm<StatusFormValues>();
+  const [assignmentForm] = Form.useForm<AssignmentFormValues>();
 
   const ticketQuery = useQuery({
     queryKey: ['ticket', id],
     enabled: Boolean(id),
     queryFn: () => ticketApi.get(id!),
   });
+  const agentsQuery = useQuery({
+    queryKey: ['assignable-agents'],
+    queryFn: () => ticketApi.listAssignableAgents(),
+  });
 
   useEffect(() => {
     if (ticketQuery.data) {
       statusForm.setFieldsValue({ status: ticketQuery.data.status });
+      assignmentForm.setFieldsValue({ agentId: ticketQuery.data.assignedAgent?.id ?? '' });
     }
-  }, [statusForm, ticketQuery.data]);
+  }, [assignmentForm, statusForm, ticketQuery.data]);
 
   const invalidateTicket = async () => {
     await Promise.all([
@@ -160,13 +170,16 @@ export function TicketDetailPage() {
   };
 
   const assignMutation = useMutation({
-    mutationFn: () => ticketApi.assign(id!, currentUser!.id),
+    mutationFn: (agentId: string) => ticketApi.assign(id!, agentId),
     onSuccess: async () => {
-      message.success('Ticket assigned to you');
+      message.success('Assignee updated');
       await invalidateTicket();
     },
     onError: (error) => {
       message.error(error instanceof Error ? error.message : 'Failed to assign ticket');
+      if (ticketQuery.data) {
+        assignmentForm.setFieldsValue({ agentId: ticketQuery.data.assignedAgent?.id ?? '' });
+      }
     },
   });
 
@@ -219,7 +232,10 @@ export function TicketDetailPage() {
 
   const ticket = ticketQuery.data;
   const isClosed = ticket?.status === 'CLOSED';
-  const canAssignToMe = Boolean(currentUser?.id && ticket && ticket.assignedAgent?.id !== currentUser.id && !isClosed);
+  const agentOptions = (agentsQuery.data ?? []).map((agent) => ({
+    value: agent.id,
+    label: `${formatIdentity(agent)}${agent.role ? ` (${agent.role})` : ''}`,
+  }));
 
   return (
     <Space direction="vertical" size={16} style={{ width: '100%' }}>
@@ -237,17 +253,30 @@ export function TicketDetailPage() {
       {ticket ? (
         <Card title="Actions">
           <Space direction="vertical" size={16} style={{ width: '100%' }}>
-            <Space wrap>
-              <Button
-                type="primary"
-                disabled={!canAssignToMe}
-                loading={assignMutation.isPending}
-                onClick={() => assignMutation.mutate()}
+            <Form<AssignmentFormValues>
+              form={assignmentForm}
+              layout="inline"
+              initialValues={{ agentId: ticket.assignedAgent?.id ?? '' }}
+              onFinish={(values) => assignMutation.mutate(values.agentId)}
+            >
+              <Form.Item
+                name="agentId"
+                label="Assignee"
+                rules={[{ required: true, message: 'Assignee is required' }]}
               >
-                Assign to me
+                <Select
+                  style={{ width: 260 }}
+                  placeholder="Select assignee"
+                  loading={agentsQuery.isLoading}
+                  disabled={isClosed}
+                  options={agentOptions}
+                />
+              </Form.Item>
+              <Button type="primary" htmlType="submit" loading={assignMutation.isPending} disabled={isClosed}>
+                Update assignee
               </Button>
-              {isClosed ? <Tag>Closed tickets cannot be assigned or replied to</Tag> : null}
-            </Space>
+            </Form>
+            {isClosed ? <Tag>Closed tickets cannot be assigned or replied to</Tag> : null}
             <Form<StatusFormValues>
               form={statusForm}
               layout="inline"

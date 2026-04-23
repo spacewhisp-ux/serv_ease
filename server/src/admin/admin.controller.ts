@@ -38,6 +38,11 @@ export class AdminController {
     private readonly loggerService: LoggerService,
   ) {}
 
+  @Get('agents')
+  listAssignableAgents(@CurrentUser() user: AuthenticatedUser) {
+    return this.adminService.listAssignableAgents(user);
+  }
+
   @Get('faq-categories')
   listFaqCategories(
     @CurrentUser() user: AuthenticatedUser,

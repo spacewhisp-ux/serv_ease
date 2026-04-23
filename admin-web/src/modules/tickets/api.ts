@@ -15,6 +15,7 @@ export interface TicketAgent {
   id: string;
   displayName?: string | null;
   email?: string | null;
+  role?: 'AGENT' | 'ADMIN';
 }
 
 export interface TicketAttachment {
@@ -108,6 +109,9 @@ export const ticketPriorityColors: Record<TicketPriority, string> = {
 };
 
 export const ticketApi = {
+  listAssignableAgents() {
+    return httpClient.get<unknown, TicketAgent[]>('/admin/agents');
+  },
   list(query: TicketListQuery) {
     return httpClient.get<unknown, ListResponse<TicketRecord>>('/admin/tickets', {
       params: query,

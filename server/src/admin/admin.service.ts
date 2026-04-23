@@ -27,6 +27,24 @@ export class AdminService {
     private readonly notificationsService: NotificationsService,
   ) {}
 
+  async listAssignableAgents(user: AuthenticatedUser) {
+    this.assertAgent(user);
+
+    return this.prisma.user.findMany({
+      where: {
+        role: { in: ['AGENT', 'ADMIN'] },
+        status: 'ACTIVE',
+      },
+      orderBy: [{ role: 'asc' }, { displayName: 'asc' }, { createdAt: 'asc' }],
+      select: {
+        id: true,
+        displayName: true,
+        email: true,
+        role: true,
+      },
+    });
+  }
+
   async listFaqCategories(
     user: AuthenticatedUser,
     query: AdminListFaqCategoriesDto,
