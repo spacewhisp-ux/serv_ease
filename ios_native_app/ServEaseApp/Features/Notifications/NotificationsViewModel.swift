@@ -34,9 +34,6 @@ final class NotificationsViewModel: ObservableObject {
     func markAsRead(id: String) async {
         do {
             try await notificationRepo.markAsRead(id: id)
-            if let index = items.firstIndex(where: { $0.id == id }) {
-                // Create a mutable copy with readAt set or rebuild
-            }
             await load()
         } catch {
             errorMessage = error.localizedDescription

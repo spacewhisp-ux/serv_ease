@@ -78,8 +78,7 @@ struct LoginScreen: View {
                         Task {
                             await vm.submit(account: account, password: password, displayName: displayName)
                             if case .success = vm.status {
-                                if let token = try? KeychainManager.shared.readAccessToken() {
-                                    // User was persisted by AuthRepository
+                                if (try? KeychainManager.shared.readAccessToken()) != nil {
                                     if let data = UserDefaultsManager.shared.savedUserJSON,
                                        let user = try? JSONDecoder().decode(User.self, from: data) {
                                         sessionVM.setAuthenticated(user: user)

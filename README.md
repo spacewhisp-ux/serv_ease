@@ -16,7 +16,6 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
-
 http://47.82.121.213:3001/v1/health
 
 ## Admin Web
@@ -37,5 +36,5 @@ Local defaults:
 
 Use an `AGENT` or `ADMIN` account to sign in. Phase 1 includes FAQ category and FAQ management.
 
-
-admin@163.com 123456789 
+admin@163.com 123456789
+Yucheng@123

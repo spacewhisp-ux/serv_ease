@@ -23,7 +23,7 @@ struct ServEaseApp: App {
             .environment(\.locale, localeManager.selectedLocale.flatMap { $0 } ?? .current)
             .task {
                 await sessionVM.restoreSession()
-                await localeManager.restore()
+                localeManager.restore()
             }
         }
     }

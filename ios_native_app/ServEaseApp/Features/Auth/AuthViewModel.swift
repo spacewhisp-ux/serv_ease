@@ -24,18 +24,17 @@ final class AuthViewModel: ObservableObject {
 
         do {
             let isEmail = account.contains("@")
-            let response: AuthResponse
 
             if isRegistering {
                 let name = (displayName?.isEmpty == false) ? displayName! : "Serv Ease User"
-                response = try await authRepo.register(
+                _ = try await authRepo.register(
                     email: isEmail ? account : nil,
                     phone: isEmail ? nil : account,
                     password: password,
                     displayName: name
                 )
             } else {
-                response = try await authRepo.login(account: account, password: password)
+                _ = try await authRepo.login(account: account, password: password)
             }
 
             status = .success

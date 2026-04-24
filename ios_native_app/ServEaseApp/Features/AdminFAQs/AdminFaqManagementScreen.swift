@@ -116,7 +116,7 @@ struct AdminFaqManagementScreen: View {
 
                 // Active filter
                 HStack(spacing: 8) {
-                    ForEach([nil, true, false], id: \.hashValue) { isActive in
+                    ForEach([Bool?.none, .some(true), .some(false)], id: \.self) { isActive in
                         let label: String = {
                             switch isActive {
                             case .none: return "All"
@@ -169,10 +169,12 @@ struct AdminFaqManagementScreen: View {
 
                     Section {
                         PrimaryPillButton("Save", isLoading: vm.isMutating) {
-                            if let editing = vm.editingCategory {
-                                await vm.updateCategory(id: editing.id, name: categoryFormName, sortOrder: categoryFormSortOrder, isActive: categoryFormIsActive)
-                            } else {
-                                await vm.createCategory(name: categoryFormName, sortOrder: categoryFormSortOrder, isActive: categoryFormIsActive)
+                            Task {
+                                if let editing = vm.editingCategory {
+                                    await vm.updateCategory(id: editing.id, name: categoryFormName, sortOrder: categoryFormSortOrder, isActive: categoryFormIsActive)
+                                } else {
+                                    await vm.createCategory(name: categoryFormName, sortOrder: categoryFormSortOrder, isActive: categoryFormIsActive)
+                                }
                             }
                         }
                         .listRowInsets(EdgeInsets())
@@ -208,10 +210,12 @@ struct AdminFaqManagementScreen: View {
                                 .map { $0.trimmingCharacters(in: .whitespaces) }
                                 .filter { !$0.isEmpty }
 
-                            if let editing = vm.editingFaq {
-                                await vm.updateFaq(id: editing.id, categoryId: faqFormCategoryId, question: faqFormQuestion, answer: faqFormAnswer, keywords: keywords, sortOrder: faqFormSortOrder, isActive: faqFormIsActive)
-                            } else {
-                                await vm.createFaq(categoryId: faqFormCategoryId, question: faqFormQuestion, answer: faqFormAnswer, keywords: keywords, sortOrder: faqFormSortOrder, isActive: faqFormIsActive)
+                            Task {
+                                if let editing = vm.editingFaq {
+                                    await vm.updateFaq(id: editing.id, categoryId: faqFormCategoryId, question: faqFormQuestion, answer: faqFormAnswer, keywords: keywords, sortOrder: faqFormSortOrder, isActive: faqFormIsActive)
+                                } else {
+                                    await vm.createFaq(categoryId: faqFormCategoryId, question: faqFormQuestion, answer: faqFormAnswer, keywords: keywords, sortOrder: faqFormSortOrder, isActive: faqFormIsActive)
+                                }
                             }
                         }
                         .listRowInsets(EdgeInsets())

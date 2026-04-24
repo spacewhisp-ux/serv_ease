@@ -43,10 +43,12 @@ struct CreateTicketSheet: View {
 
                 Section {
                     PrimaryPillButton("Submit ticket", isLoading: vm.status == .submitting) {
-                        let success = await vm.submit()
-                        if success {
-                            onCreated(true)
-                            dismiss()
+                        Task {
+                            let success = await vm.submit()
+                            if success {
+                                onCreated(true)
+                                dismiss()
+                            }
                         }
                     }
                     .listRowInsets(EdgeInsets())
