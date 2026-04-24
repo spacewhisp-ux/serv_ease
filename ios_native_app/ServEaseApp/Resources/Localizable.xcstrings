@@ -1,0 +1,443 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "app_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serv Ease"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serv Ease"
+          }
+        }
+      }
+    },
+    "nav_faqs" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "FAQs" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "常见问题" } }
+      }
+    },
+    "nav_tickets" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tickets" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "工单" } }
+      }
+    },
+    "nav_alerts" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Alerts" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "提醒" } }
+      }
+    },
+    "menu_settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "设置" } }
+      }
+    },
+    "menu_sign_out" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Sign out" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "退出登录" } }
+      }
+    },
+    "sign_in" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Sign in" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "登录" } }
+      }
+    },
+    "create_account" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Create account" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "注册" } }
+      }
+    },
+    "email_or_phone" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Email or phone" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "邮箱或手机号" } }
+      }
+    },
+    "password_hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Password (min 8 chars)" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "密码（至少8位）" } }
+      }
+    },
+    "display_name_hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Display name (min 2 chars)" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "昵称（至少2字）" } }
+      }
+    },
+    "already_have_account" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Already have an account? Sign in" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "已有账号？登录" } }
+      }
+    },
+    "dont_have_account" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Don't have an account? Create one" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "没有账号？注册" } }
+      }
+    },
+    "help_center" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Help Center" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "帮助中心" } }
+      }
+    },
+    "help_subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Find answers to common questions" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "查找常见问题的答案" } }
+      }
+    },
+    "search_faqs" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Search FAQs..." } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "搜索常见问题..." } }
+      }
+    },
+    "no_results" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No results" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "无结果" } }
+      }
+    },
+    "no_results_hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Try a different search term or category" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "试试不同的搜索词或分类" } }
+      }
+    },
+    "tickets_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Tickets" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "工单" } }
+      }
+    },
+    "tickets_subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Track your support requests" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "追踪您的客服请求" } }
+      }
+    },
+    "new_ticket" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "New ticket" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "新建工单" } }
+      }
+    },
+    "load_more" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Load more" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "加载更多" } }
+      }
+    },
+    "no_tickets" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No tickets" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "暂无工单" } }
+      }
+    },
+    "no_tickets_hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Create a new ticket to get started" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "创建一个新工单开始" } }
+      }
+    },
+    "conversation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Conversation" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "对话" } }
+      }
+    },
+    "send_reply" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Send reply" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "发送回复" } }
+      }
+    },
+    "close_ticket" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Close ticket" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "关闭工单" } }
+      }
+    },
+    "close_ticket_message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Are you sure you want to close this ticket?" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "确定要关闭此工单吗？" } }
+      }
+    },
+    "reason_optional" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Reason (optional)" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "原因（选填）" } }
+      }
+    },
+    "subject_hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Min 5 characters" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "至少5个字符" } }
+      }
+    },
+    "description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Description" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "描述" } }
+      }
+    },
+    "category" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Category" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "分类" } }
+      }
+    },
+    "priority" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Priority" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "优先级" } }
+      }
+    },
+    "submit_ticket" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Submit ticket" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "提交工单" } }
+      }
+    },
+    "alerts_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Alerts" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "提醒" } }
+      }
+    },
+    "mark_all_read" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Mark all as read" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "全部标为已读" } }
+      }
+    },
+    "no_notifications" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No notifications" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "暂无通知" } }
+      }
+    },
+    "no_notifications_hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "You'll see updates here when something changes" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "当有更新时您将在此看到通知" } }
+      }
+    },
+    "settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "设置" } }
+      }
+    },
+    "language" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Language" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "语言" } }
+      }
+    },
+    "follow_system" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Follow system" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "跟随系统" } }
+      }
+    },
+    "faq_management" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "FAQ management" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "FAQ管理" } }
+      }
+    },
+    "failed_to_load" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Failed to load" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "加载失败" } }
+      }
+    },
+    "please_try_again" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Please try again" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "请重试" } }
+      }
+    },
+    "cancel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Cancel" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "取消" } }
+      }
+    },
+    "save" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Save" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "保存" } }
+      }
+    },
+    "attachments" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Attachments" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "附件" } }
+      }
+    },
+    "related_topics" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Related topics" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "相关话题" } }
+      }
+    },
+    "unread_count" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "%lld unread" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "%lld 条未读" } }
+      }
+    },
+    "add_category" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Add category" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "添加分类" } }
+      }
+    },
+    "add_faq" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Add FAQ" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "添加FAQ" } }
+      }
+    },
+    "edit_category" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Edit category" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "编辑分类" } }
+      }
+    },
+    "new_category" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "New category" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "新建分类" } }
+      }
+    },
+    "edit_faq" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Edit FAQ" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "编辑FAQ" } }
+      }
+    },
+    "new_faq" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "New FAQ" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "新建FAQ" } }
+      }
+    },
+    "no_faqs" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "No FAQs" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "暂无FAQ" } }
+      }
+    },
+    "no_faqs_hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Add your first FAQ entry" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "添加您的第一个FAQ条目" } }
+      }
+    },
+    "sort_order" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Sort order" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "排序" } }
+      }
+    },
+    "active" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Active" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "启用" } }
+      }
+    },
+    "inactive" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Inactive" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "停用" } }
+      }
+    },
+    "keywords_hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "keyword1, keyword2" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "关键词1, 关键词2" } }
+      }
+    }
+  },
+  "version" : "1.0"
+}
