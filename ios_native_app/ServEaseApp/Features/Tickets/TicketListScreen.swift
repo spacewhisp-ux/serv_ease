@@ -6,94 +6,96 @@ struct TicketListScreen: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: 20) {
-                    // Header
-                    VStack(spacing: 8) {
-                        Text("Tickets")
-                            .font(.displaySmall)
-                            .foregroundColor(DesignTokens.expoBlack)
+            GeometryReader { geometry in
+                let isCompact = DesignTokens.DeviceAdaptation.isCompactHeight(geometry.size.height)
+                let sectionSpacing = DesignTokens.DeviceAdaptation.sectionSpacing(for: geometry.size.height)
+                let cardSpacing = DesignTokens.DeviceAdaptation.cardSpacing(for: geometry.size.height)
 
-                        Text("Track your support requests")
-                            .font(.bodyLarge)
-                            .foregroundColor(DesignTokens.slateGray)
-                    }
-                    .padding(.top, 8)
+                ScrollView {
+                    VStack(spacing: sectionSpacing) {
+                        VStack(spacing: DesignTokens.Spacing.sm) {
+                            Text("Tickets")
+                                .font(.displaySmall)
+                                .foregroundColor(DesignTokens.expoBlack)
 
-                    // New ticket button
-                    PrimaryPillButton("New ticket") {
-                        showCreateSheet = true
-                    }
-                    .padding(.horizontal, 8)
+                            Text("Track your support requests")
+                                .font(.bodyLarge)
+                                .foregroundColor(DesignTokens.slateGray)
+                        }
+                        .padding(.top, DesignTokens.Spacing.sm)
 
-                    // Status filter chips
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 8) {
-                            ForEach(TicketListViewModel.statusOptions, id: \.self) { status in
-                                StatusChip(status, isSelected: vm.selectedStatus == status) {
-                                    Task { await vm.filterByStatus(status) }
+                        PrimaryPillButton("New ticket") {
+                            showCreateSheet = true
+                        }
+                        .padding(.horizontal, DesignTokens.Spacing.sm)
+
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: DesignTokens.Spacing.sm) {
+                                ForEach(TicketListViewModel.statusOptions, id: \.self) { status in
+                                    StatusChip(status, isSelected: vm.selectedStatus == status) {
+                                        Task { await vm.filterByStatus(status) }
+                                    }
                                 }
                             }
+                            .padding(.horizontal, DesignTokens.Spacing.xs)
                         }
-                        .padding(.horizontal, 4)
-                    }
 
-                    // Ticket list
-                    switch vm.status {
-                    case .initial:
-                        EmptyView()
-                    case .loading:
-                        ProgressView()
-                            .padding(.top, 40)
-                    case .failure:
-                        EmptyStateCard(
-                            title: "Failed to load tickets",
-                            description: LocalizedStringKey(vm.errorMessage ?? "Please try again")
-                        )
-                    case .success:
-                        if vm.items.isEmpty {
+                        switch vm.status {
+                        case .initial:
+                            EmptyView()
+                        case .loading:
+                            ProgressView()
+                                .padding(.top, DesignTokens.Spacing.xxl)
+                        case .failure:
                             EmptyStateCard(
-                                title: "No tickets",
-                                description: "Create a new ticket to get started"
+                                title: "Failed to load tickets",
+                                description: LocalizedStringKey(vm.errorMessage ?? "Please try again")
                             )
-                        } else {
-                            LazyVStack(spacing: 12) {
-                                ForEach(vm.items) { ticket in
-                                    NavigationLink(destination: TicketDetailScreen(ticketId: ticket.id)) {
-                                        ticketCard(ticket)
+                        case .success:
+                            if vm.items.isEmpty {
+                                EmptyStateCard(
+                                    title: "No tickets",
+                                    description: "Create a new ticket to get started"
+                                )
+                            } else {
+                                LazyVStack(spacing: cardSpacing) {
+                                    ForEach(vm.items) { ticket in
+                                        NavigationLink(destination: TicketDetailScreen(ticketId: ticket.id)) {
+                                            ticketCard(ticket)
+                                        }
+                                        .buttonStyle(.plain)
                                     }
-                                    .buttonStyle(.plain)
-                                }
 
-                                if vm.hasMore {
-                                    Button("Load more") {
-                                        Task { await vm.loadMore() }
+                                    if vm.hasMore {
+                                        Button("Load more") {
+                                            Task { await vm.loadMore() }
+                                        }
+                                        .font(.bodyLarge)
+                                        .foregroundColor(DesignTokens.linkCobalt)
+                                        .padding(.vertical, DesignTokens.Spacing.md)
                                     }
-                                    .font(.bodyLarge)
-                                    .foregroundColor(DesignTokens.linkCobalt)
-                                    .padding(.vertical, 12)
-                                }
 
-                                if vm.isLoadingMore {
-                                    ProgressView()
+                                    if vm.isLoadingMore {
+                                        ProgressView()
+                                    }
                                 }
                             }
                         }
                     }
+                    .padding(DesignTokens.Spacing.lg)
                 }
-                .padding(16)
-            }
-            .background(DesignTokens.cloudGray)
-            .refreshable {
-                await vm.load()
-            }
-            .task {
-                await vm.load()
-            }
-            .sheet(isPresented: $showCreateSheet) {
-                CreateTicketSheet { _ in
-                    showCreateSheet = false
-                    Task { await vm.load() }
+                .background(DesignTokens.cloudGray)
+                .refreshable {
+                    await vm.load()
+                }
+                .task {
+                    await vm.load()
+                }
+                .sheet(isPresented: $showCreateSheet) {
+                    CreateTicketSheet { _ in
+                        showCreateSheet = false
+                        Task { await vm.load() }
+                    }
                 }
             }
         }

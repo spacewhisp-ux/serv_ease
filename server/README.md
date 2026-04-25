@@ -29,6 +29,7 @@ docker compose up -d
 ```
 
 The default database settings match `.env.example`:
+
 - host: `localhost`
 - port: `5432`
 - database: `serv_ease`
@@ -36,6 +37,7 @@ The default database settings match `.env.example`:
 - password: `postgres`
 
 Compose file:
+
 - `server/docker-compose.yml`
 
 ## Prisma Workflow
@@ -59,6 +61,7 @@ yarn prisma:seed
 ```
 
 An initial SQL migration has already been generated at:
+
 - `server/prisma/migrations/202604171645_init/migration.sql`
 
 ## Commands
@@ -80,22 +83,26 @@ curl http://localhost:3001/v1/health
 ## Implemented API Surface
 
 ### Auth
+
 - `POST /v1/auth/register`
 - `POST /v1/auth/login`
 - `POST /v1/auth/refresh`
 - `POST /v1/auth/logout`
 
 ### Users
+
 - `GET /v1/users/me`
 - `PATCH /v1/users/me`
 - `DELETE /v1/account`
 
 ### FAQ
+
 - `GET /v1/faq-categories`
 - `GET /v1/faqs`
 - `GET /v1/faqs/:id`
 
 ### Admin FAQ
+
 - `GET /v1/admin/faq-categories`
 - `POST /v1/admin/faq-categories`
 - `PATCH /v1/admin/faq-categories/:id`
@@ -107,6 +114,7 @@ curl http://localhost:3001/v1/health
 - `DELETE /v1/admin/faqs/:id`
 
 ### Tickets
+
 - `POST /v1/tickets`
 - `GET /v1/tickets`
 - `GET /v1/tickets/:id`
@@ -114,6 +122,7 @@ curl http://localhost:3001/v1/health
 - `PATCH /v1/tickets/:id/close`
 
 ### Uploads
+
 - `POST /v1/uploads/ticket-attachments`
 - `POST /v1/uploads/:attachmentId/complete`
 
@@ -123,3 +132,5 @@ curl http://localhost:3001/v1/health
 - Attachments currently use a placeholder upload URL and are designed to be replaced with S3-compatible signed uploads later.
 - Ticket attachments now support pre-upload, so the client can upload files before ticket creation.
 - FAQ and ticket flows already use real Prisma queries; auth persists refresh-token sessions in the database.
+
+pm2 start npm --name serv-ease-server -- run start:prod

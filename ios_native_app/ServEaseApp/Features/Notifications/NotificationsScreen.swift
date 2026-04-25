@@ -5,63 +5,66 @@ struct NotificationsScreen: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: 16) {
-                    // Header
-                    VStack(spacing: 8) {
-                        Text("Alerts")
-                            .font(.displaySmall)
-                            .foregroundColor(DesignTokens.expoBlack)
+            GeometryReader { geometry in
+                let sectionSpacing = DesignTokens.DeviceAdaptation.sectionSpacing(for: geometry.size.height)
+                let cardSpacing = DesignTokens.DeviceAdaptation.cardSpacing(for: geometry.size.height)
 
-                        Text("\(vm.unreadCount) unread")
-                            .font(.bodyLarge)
-                            .foregroundColor(DesignTokens.slateGray)
-                    }
-                    .padding(.top, 8)
+                ScrollView {
+                    VStack(spacing: sectionSpacing) {
+                        VStack(spacing: DesignTokens.Spacing.sm) {
+                            Text("Alerts")
+                                .font(.displaySmall)
+                                .foregroundColor(DesignTokens.expoBlack)
 
-                    if vm.unreadCount > 0 {
-                        Button("Mark all as read") {
-                            Task { await vm.markAllAsRead() }
+                            Text("\(vm.unreadCount) unread")
+                                .font(.bodyLarge)
+                                .foregroundColor(DesignTokens.slateGray)
                         }
-                        .font(.bodyMedium)
-                        .foregroundColor(DesignTokens.linkCobalt)
-                    }
+                        .padding(.top, DesignTokens.Spacing.sm)
 
-                    // List
-                    switch vm.status {
-                    case .initial:
-                        EmptyView()
-                    case .loading:
-                        ProgressView()
-                            .padding(.top, 40)
-                    case .failure:
-                        EmptyStateCard(
-                            title: "Failed to load",
-                            description: LocalizedStringKey(vm.errorMessage ?? "Please try again")
-                        )
-                    case .success:
-                        if vm.items.isEmpty {
+                        if vm.unreadCount > 0 {
+                            Button("Mark all as read") {
+                                Task { await vm.markAllAsRead() }
+                            }
+                            .font(.bodyMedium)
+                            .foregroundColor(DesignTokens.linkCobalt)
+                        }
+
+                        switch vm.status {
+                        case .initial:
+                            EmptyView()
+                        case .loading:
+                            ProgressView()
+                                .padding(.top, DesignTokens.Spacing.xxl)
+                        case .failure:
                             EmptyStateCard(
-                                title: "No notifications",
-                                description: "You'll see updates here when something changes"
+                                title: "Failed to load",
+                                description: LocalizedStringKey(vm.errorMessage ?? "Please try again")
                             )
-                        } else {
-                            LazyVStack(spacing: 12) {
-                                ForEach(vm.items) { notif in
-                                    notificationCard(notif)
+                        case .success:
+                            if vm.items.isEmpty {
+                                EmptyStateCard(
+                                    title: "No notifications",
+                                    description: "You'll see updates here when something changes"
+                                )
+                            } else {
+                                LazyVStack(spacing: cardSpacing) {
+                                    ForEach(vm.items) { notif in
+                                        notificationCard(notif)
+                                    }
                                 }
                             }
                         }
                     }
+                    .padding(DesignTokens.Spacing.lg)
                 }
-                .padding(16)
-            }
-            .background(DesignTokens.cloudGray)
-            .refreshable {
-                await vm.load()
-            }
-            .task {
-                await vm.load()
+                .background(DesignTokens.cloudGray)
+                .refreshable {
+                    await vm.load()
+                }
+                .task {
+                    await vm.load()
+                }
             }
         }
     }
