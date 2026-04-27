@@ -2,10 +2,12 @@ import { Button, Dropdown, Layout, Menu, Space, Typography, message } from 'antd
 import {
   FileTextOutlined,
   FolderOpenOutlined,
+  KeyOutlined,
   LogoutOutlined,
   UserOutlined,
   FileSearchOutlined,
   MessageOutlined,
+  QuestionCircleOutlined,
 } from '@ant-design/icons';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
@@ -22,17 +24,30 @@ export function AdminLayout() {
   const refreshToken = useAuthStore((state) => state.refreshToken);
   const setSession = useAuthStore((state) => state.setSession);
 
-  const selectedKey = location.pathname.startsWith('/categories')
-    ? 'categories'
-    : location.pathname.startsWith('/tickets')
-      ? 'tickets'
-      : location.pathname.startsWith('/logs')
-        ? 'logs'
-        : 'faqs';
+  const selectedKey = location.pathname.startsWith('/chat-questions')
+    ? 'chat-questions'
+    : location.pathname.startsWith('/chat-keywords')
+      ? 'chat-keywords'
+      : location.pathname.startsWith('/categories')
+        ? 'categories'
+        : location.pathname.startsWith('/tickets')
+          ? 'tickets'
+          : location.pathname.startsWith('/logs')
+            ? 'logs'
+            : 'faqs';
 
   const menuItems = [
     { key: 'faqs', icon: <FileTextOutlined />, label: 'FAQs' },
     { key: 'categories', icon: <FolderOpenOutlined />, label: 'FAQ Categories' },
+    {
+      key: 'chat-group',
+      icon: <MessageOutlined />,
+      label: 'Chat Q&A',
+      children: [
+        { key: 'chat-questions', icon: <QuestionCircleOutlined />, label: 'Questions' },
+        { key: 'chat-keywords', icon: <KeyOutlined />, label: 'Keywords' },
+      ],
+    },
     { key: 'tickets', icon: <MessageOutlined />, label: 'Tickets' },
     { key: 'logs', icon: <FileSearchOutlined />, label: 'Access Logs' },
   ];
@@ -51,6 +66,8 @@ export function AdminLayout() {
           items={menuItems}
           onClick={({ key }) => {
             const routeMap: Record<string, string> = {
+              'chat-questions': '/chat-questions',
+              'chat-keywords': '/chat-keywords',
               categories: '/categories',
               tickets: '/tickets',
               logs: '/logs',
@@ -71,13 +88,17 @@ export function AdminLayout() {
           }}
         >
           <Typography.Text strong>
-            {selectedKey === 'categories'
-              ? 'FAQ Categories'
-              : selectedKey === 'tickets'
-                ? 'Tickets'
-                : selectedKey === 'logs'
-                  ? 'Access Logs'
-                  : 'FAQs'}
+            {selectedKey === 'chat-questions'
+              ? 'Chat Questions'
+              : selectedKey === 'chat-keywords'
+                ? 'Chat Keywords'
+                : selectedKey === 'categories'
+                  ? 'FAQ Categories'
+                  : selectedKey === 'tickets'
+                    ? 'Tickets'
+                    : selectedKey === 'logs'
+                      ? 'Access Logs'
+                      : 'FAQs'}
           </Typography.Text>
           <Dropdown
             menu={{

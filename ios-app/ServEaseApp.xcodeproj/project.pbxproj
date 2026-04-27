@@ -1,0 +1,692 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0049E1FB1F175E63AC968E41 /* ServEaseApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2FD99BF6C76A9028384BBB /* ServEaseApp.swift */; };
+		03044FCBB0CE36E2865722CF /* NotificationRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DF641E42B8B73224B3238A1 /* NotificationRepository.swift */; };
+		038C2A9FA9A8D093357CE0AC /* AppContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F89A38172BA8D49FC1F234C /* AppContext.swift */; };
+		065916A6ECDF9D13630A9823 /* SurfaceCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D53D33DF3F0BE57504827F /* SurfaceCard.swift */; };
+		0BE774FA9E890482380CC492 /* SecurityMaintenanceCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43FF4B6ED03BDB188BE98720 /* SecurityMaintenanceCard.swift */; };
+		14C893147F2DB7DBA067A39D /* LanguageSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5887E8380FCA8477967916 /* LanguageSettingsView.swift */; };
+		16B024DF8D7CB2B879B3898F /* BannerCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CEFE38A7D87580E5637405E /* BannerCard.swift */; };
+		17D1F0B534B9CDF436315145 /* TicketListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F576455668CA39697DD0C4AC /* TicketListViewModel.swift */; };
+		1830CA456C9F8748BA469C4E /* TicketRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACB976203D062FA30EB4246 /* TicketRepository.swift */; };
+		18F7F76BF0272815C0333406 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A0F1A9BBEA69DD4E4FE0C68F /* Foundation.framework */; };
+		190106D6BC7B0805B6314B34 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 804B87C416C31DB15B71B7FD /* LoginView.swift */; };
+		1A2BE92A716018BF5E234D91 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F453E0F2149A984CC81905CE /* Foundation.framework */; };
+		220E4DD274ECEA3972518BA3 /* TicketDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34536390124BCF9C21844E9F /* TicketDetailViewModel.swift */; };
+		24808242E40C9291BD0027FA /* PrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B017078E3D451BBCFAEE008 /* PrimaryButtonStyle.swift */; };
+		2A736DB4859794171C53ADEF /* AppPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBA284C10F8D22A22386406C /* AppPalette.swift */; };
+		2DA9C405C36A023E377D1051 /* AccountCheckCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB19B096798DE1416BC8DBD /* AccountCheckCard.swift */; };
+		2E245BC41463982060391D99 /* EnvironmentConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2E7C25B6B415DABA70E22B1 /* EnvironmentConfig.swift */; };
+		2ED5C494107AF3A7611F33C7 /* AccountCheckRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A42DBD92642EFDF59BE4AB /* AccountCheckRepository.swift */; };
+		309753C304782D87BA4969D8 /* SectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195A5AA918755945C4C2ECD3 /* SectionHeader.swift */; };
+		31A23C2207F59E806DF8FC28 /* HelpCenterRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95D69CCDF60F98993927DCE /* HelpCenterRepository.swift */; };
+		33C0A8396D6ADECEC18F0161 /* CreateTicketView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A135977C1B0D280499A5F5 /* CreateTicketView.swift */; };
+		39907A4147BB7F5FBB8BE32E /* HelpCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8629CF3525C0F8FC9ED31B /* HelpCenterView.swift */; };
+		3D460F677A83AD58962EAAA0 /* SessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0616323E4AA6B5E38F83BA /* SessionStore.swift */; };
+		3E4ED415C8BDA1BC2EF8F501 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB51DE7E18489062E87FDFCD /* ProfileView.swift */; };
+		424B13AF5C888A88622F8FDB /* AppContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC676EA38C213CCE0018B118 /* AppContainer.swift */; };
+		45639E085FB51E0A43B13C36 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAC15484DBD90345407096F /* HomeViewModel.swift */; };
+		5428521C54FFF70A47AF997C /* PrivacyPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5D784FB922A34FD7E54A88 /* PrivacyPolicyView.swift */; };
+		5709C475DE6B47B3689E395C /* LoadingStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622A8F05C5036CDA0F543646 /* LoadingStateView.swift */; };
+		59BB3D2E1ADAB3E7AF40B3C3 /* UserAgreementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 136C09FB7F8D361A1CFE73EB /* UserAgreementView.swift */; };
+		5A46FCCCCDF7AEDE99B0FF4E /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9730484883A51CD4DF303B0F /* LoginViewModel.swift */; };
+		708CA36F70AA3FBE1586999E /* TicketDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C67A84B58808FFC6516C3960 /* TicketDetailView.swift */; };
+		74C925C5511E2E79A0EF6C02 /* AppModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A368B4660DA046BB8BA51B /* AppModels.swift */; };
+		75119B07D2DEAFEB2F25F55F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7D4B386B752521A8312FE0A /* HomeView.swift */; };
+		7C3932373A347B05E06055B4 /* TicketListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E50D7C93FD6F1E15D4FFDBA /* TicketListView.swift */; };
+		7F7C07FE6E2319625A9F50E3 /* TokenStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DFFCFA60C3A2D1636320AC9 /* TokenStore.swift */; };
+		7FC384E64459B224CDFB396E /* PillTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D124770A953885F6705C57A /* PillTag.swift */; };
+		8EFBF40192AA4B22C3B213BC /* FaqDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839D3FF123C032B450F2E9C7 /* FaqDetailViewModel.swift */; };
+		90E4F644B3A91C0E6C50703D /* HelpCenterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A17C2B4A9EE0ED096DCE9A8 /* HelpCenterViewModel.swift */; };
+		936C01576B4D42D5B73E312D /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9A91881403EE958611C1F3 /* ProfileViewModel.swift */; };
+		9BDACB0F96C8C77994511BB5 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFB2F3E0C9BF85E79453991 /* AppRouter.swift */; };
+		9DA260AFCAAFB680EEB989AD /* CreateTicketViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C748DA491E2E1765AD6B53D /* CreateTicketViewModel.swift */; };
+		A122194C9081E470F841A31D /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2591FCA65D8E40F9B24F8B03 /* AppSettings.swift */; };
+		A15E16906BEF53AF017D1041 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D6355277711DFD60BEAD4D2 /* APIClient.swift */; };
+		A4F57E1B1736B70C9C30FF1C /* SessionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF122211CAD608254E9EE1B9 /* SessionViewModel.swift */; };
+		A67D246E30F832610A96F2E4 /* TicketRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ECC0D04921ECB8E2CFE746F /* TicketRootView.swift */; };
+		A78EC237AA74F7B0C699D8C0 /* AuthRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8520AC776DB4E63117112A54 /* AuthRepository.swift */; };
+		C29DA69B13EF0181CAB9DC04 /* FaqDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E95A0005E523964B4C5A555 /* FaqDetailView.swift */; };
+		C592EF57FF373ACF34A694BA /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D7F9F102D10756F3B92CE6 /* EmptyStateView.swift */; };
+		D1F56823E67A33F1640679FA /* Pods_ServEaseApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 968B536079F0159BC3B24CCA /* Pods_ServEaseApp.framework */; };
+		D2CD85345318ABB330F9DAE3 /* HealthRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B59681A36F7A02CE7D2FB4E /* HealthRepository.swift */; };
+		D43BB4956874CB34236F825E /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C01DC17D10B4CE4F542649C8 /* SwiftUI.framework */; };
+		E8F4E6DE9AF11F4A3AC7A02A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E27F2F840A0E6FEB929E9DC7 /* Security.framework */; };
+		F394658C5DA51781385FDF9B /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CC6C4300B917B4662A097C /* NotificationsView.swift */; };
+		F76C3AE6DCF9A48F8CF2237A /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C7AB57CF5B30ABC574B784 /* MainTabView.swift */; };
+		1A2B3C4D5E6F7A8B9C0D1E2F /* KVStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1F2 /* KVStore.swift */; };
+		2B3C4D5E6F7A8B9C0D1E2F3A /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C3D4E5F6A7B8C9D0E1F2A3 /* ToastView.swift */; };
+		3C4D5E6F7A8B9C0D1E2F3A4B /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D4E5F6A7B8C9D0E1F2A3B4 /* BottomSheetView.swift */; };
+		4D5E6F7A8B9C0D1E2F3A4B5C /* RemoteImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E5F6A7B8C9D0E1F2A3B4C5 /* RemoteImage.swift */; };
+		5E6F7A8B9C0D1E2F3A4B5C6D /* LottieAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5F6A7B8C9D0E1F2A3B4C5D6 /* LottieAnimation.swift */; };
+		6F7A8B9C0D1E2F3A4B5C6D7E /* AppFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A7B8C9D0E1F2A3B4C5D6E7 /* AppFont.swift */; };
+		7A8B9C0D1E2F3A4B5C6D7E8F /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B8C9D0E1F2A3B4C5D6E7F8 /* AppIcon.swift */; };
+		8B9C0D1E2F3A4B5C6D7E8F9A /* ShimmerModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C0D1E2F3A4B5C6D7E8F9A1 /* ShimmerModifier.swift */; };
+		9C0D1E2F3A4B5C6D7E8F9A1B /* SkeletonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D1E2F3A4B5C6D7E8F9A1B2 /* SkeletonView.swift */; };
+		AD1E2F3A4B5C6D7E8F9A1B2C /* AnimatedGradientBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E2F3A4B5C6D7E8F9A1B2C3 /* AnimatedGradientBackground.swift */; };
+		BE2F3A4B5C6D7E8F9A1B2C3D /* PageTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F3A4B5C6D7E8F9A1B2C3D4 /* PageTransition.swift */; };
+		A4405F9426634FC28D50B432 /* DebugSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90E1893A630C4A799C41BC1B /* DebugSettings.swift */; };
+		2E0337155F8746B68A35F31A /* APILogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9E8683529D418D8AF39030 /* APILogger.swift */; };
+		9EF4B4B762BC4481A8564B73 /* APIDebugViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC082486EB18466DB1263F2C /* APIDebugViewModel.swift */; };
+		7EE167A0879540F098D50185 /* APIDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E95087B4C5774386AA5A1CAE /* APIDebugView.swift */; };
+		1690D72F630B4920866A86DE /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = B0F46B25A7EA4866A61A6F0C /* Config.plist */; };
+		A3B44886F47C454A9FF9718E /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279E6E2E400B441EBF5410A7 /* ChatView.swift */; };
+		FABE0ED62A7B4850B6A1CBFD /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91552E7011C34028A592AA04 /* ChatViewModel.swift */; };
+		5A07C36F8C7A460FB985E354 /* ChatRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92DBD6B9DC5F459E965293D4 /* ChatRepository.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A1B2C3D4E5F6A7B8C9D0E1F2 /* KVStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = KVStore.swift; path = ServEaseApp/Core/Storage/KVStore.swift; sourceTree = "<group>"; };
+		B2C3D4E5F6A7B8C9D0E1F2A3 /* ToastView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ToastView.swift; path = ServEaseApp/Core/DesignSystem/ToastView.swift; sourceTree = "<group>"; };
+		C3D4E5F6A7B8C9D0E1F2A3B4 /* BottomSheetView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BottomSheetView.swift; path = ServEaseApp/Core/DesignSystem/BottomSheetView.swift; sourceTree = "<group>"; };
+		D4E5F6A7B8C9D0E1F2A3B4C5 /* RemoteImage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RemoteImage.swift; path = ServEaseApp/Core/DesignSystem/RemoteImage.swift; sourceTree = "<group>"; };
+		E5F6A7B8C9D0E1F2A3B4C5D6 /* LottieAnimation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LottieAnimation.swift; path = ServEaseApp/Core/DesignSystem/LottieAnimation.swift; sourceTree = "<group>"; };
+		F6A7B8C9D0E1F2A3B4C5D6E7 /* AppFont.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppFont.swift; path = ServEaseApp/Core/DesignSystem/AppFont.swift; sourceTree = "<group>"; };
+		A7B8C9D0E1F2A3B4C5D6E7F8 /* AppIcon.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppIcon.swift; path = ServEaseApp/Core/DesignSystem/AppIcon.swift; sourceTree = "<group>"; };
+		B9C0D1E2F3A4B5C6D7E8F9A1 /* ShimmerModifier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ShimmerModifier.swift; path = ServEaseApp/Core/DesignSystem/ShimmerModifier.swift; sourceTree = "<group>"; };
+		C0D1E2F3A4B5C6D7E8F9A1B2 /* SkeletonView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SkeletonView.swift; path = ServEaseApp/Core/DesignSystem/SkeletonView.swift; sourceTree = "<group>"; };
+		D1E2F3A4B5C6D7E8F9A1B2C3 /* AnimatedGradientBackground.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AnimatedGradientBackground.swift; path = ServEaseApp/Core/DesignSystem/AnimatedGradientBackground.swift; sourceTree = "<group>"; };
+		E2F3A4B5C6D7E8F9A1B2C3D4 /* PageTransition.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PageTransition.swift; path = ServEaseApp/Core/DesignSystem/PageTransition.swift; sourceTree = "<group>"; };
+		02A42DBD92642EFDF59BE4AB /* AccountCheckRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AccountCheckRepository.swift; path = ServEaseApp/Services/Repositories/AccountCheckRepository.swift; sourceTree = "<group>"; };
+		0D124770A953885F6705C57A /* PillTag.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PillTag.swift; path = ServEaseApp/Core/DesignSystem/PillTag.swift; sourceTree = "<group>"; };
+		0D6355277711DFD60BEAD4D2 /* APIClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = APIClient.swift; path = ServEaseApp/Core/Network/APIClient.swift; sourceTree = "<group>"; };
+		12A368B4660DA046BB8BA51B /* AppModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppModels.swift; path = ServEaseApp/Core/Models/AppModels.swift; sourceTree = "<group>"; };
+		136C09FB7F8D361A1CFE73EB /* UserAgreementView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UserAgreementView.swift; path = ServEaseApp/Features/Profile/Legal/UserAgreementView.swift; sourceTree = "<group>"; };
+		15C71D4956B4F80F0E9A6326 /* Pods-ServEaseApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ServEaseApp.release.xcconfig"; path = "Target Support Files/Pods-ServEaseApp/Pods-ServEaseApp.release.xcconfig"; sourceTree = "<group>"; };
+		1687C31E9A502E39D58D56C8 /* Debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Config/Debug.xcconfig; sourceTree = "<group>"; };
+		195A5AA918755945C4C2ECD3 /* SectionHeader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SectionHeader.swift; path = ServEaseApp/Core/DesignSystem/SectionHeader.swift; sourceTree = "<group>"; };
+		22D53D33DF3F0BE57504827F /* SurfaceCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SurfaceCard.swift; path = ServEaseApp/Core/DesignSystem/SurfaceCard.swift; sourceTree = "<group>"; };
+		2591FCA65D8E40F9B24F8B03 /* AppSettings.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppSettings.swift; path = ServEaseApp/Core/Config/AppSettings.swift; sourceTree = "<group>"; };
+		2B5887E8380FCA8477967916 /* LanguageSettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LanguageSettingsView.swift; path = ServEaseApp/Features/Profile/Settings/LanguageSettingsView.swift; sourceTree = "<group>"; };
+		2CB19B096798DE1416BC8DBD /* AccountCheckCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AccountCheckCard.swift; path = ServEaseApp/Features/Home/Components/AccountCheckCard.swift; sourceTree = "<group>"; };
+		2F89A38172BA8D49FC1F234C /* AppContext.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppContext.swift; path = ServEaseApp/App/AppContext.swift; sourceTree = "<group>"; };
+		34536390124BCF9C21844E9F /* TicketDetailViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TicketDetailViewModel.swift; path = ServEaseApp/Features/Tickets/TicketDetailViewModel.swift; sourceTree = "<group>"; };
+		37A135977C1B0D280499A5F5 /* CreateTicketView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CreateTicketView.swift; path = ServEaseApp/Features/Tickets/CreateTicketView.swift; sourceTree = "<group>"; };
+		3CEFE38A7D87580E5637405E /* BannerCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BannerCard.swift; path = ServEaseApp/Features/Home/Components/BannerCard.swift; sourceTree = "<group>"; };
+		3E50D7C93FD6F1E15D4FFDBA /* TicketListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TicketListView.swift; path = ServEaseApp/Features/Tickets/TicketListView.swift; sourceTree = "<group>"; };
+		3EFB2F3E0C9BF85E79453991 /* AppRouter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppRouter.swift; path = ServEaseApp/App/AppRouter.swift; sourceTree = "<group>"; };
+		43FF4B6ED03BDB188BE98720 /* SecurityMaintenanceCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SecurityMaintenanceCard.swift; path = ServEaseApp/Features/Home/Components/SecurityMaintenanceCard.swift; sourceTree = "<group>"; };
+		49CC6C4300B917B4662A097C /* NotificationsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NotificationsView.swift; path = ServEaseApp/Features/Profile/NotificationsView.swift; sourceTree = "<group>"; };
+		622A8F05C5036CDA0F543646 /* LoadingStateView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LoadingStateView.swift; path = ServEaseApp/Core/DesignSystem/LoadingStateView.swift; sourceTree = "<group>"; };
+		6A17C2B4A9EE0ED096DCE9A8 /* HelpCenterViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HelpCenterViewModel.swift; path = ServEaseApp/Features/HelpCenter/HelpCenterViewModel.swift; sourceTree = "<group>"; };
+		6E95A0005E523964B4C5A555 /* FaqDetailView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FaqDetailView.swift; path = ServEaseApp/Features/HelpCenter/FaqDetailView.swift; sourceTree = "<group>"; };
+		7ACB976203D062FA30EB4246 /* TicketRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TicketRepository.swift; path = ServEaseApp/Services/Repositories/TicketRepository.swift; sourceTree = "<group>"; };
+		7DAC15484DBD90345407096F /* HomeViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HomeViewModel.swift; path = ServEaseApp/Features/Home/HomeViewModel.swift; sourceTree = "<group>"; };
+		7DFFCFA60C3A2D1636320AC9 /* TokenStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokenStore.swift; path = ServEaseApp/Core/Storage/TokenStore.swift; sourceTree = "<group>"; };
+		7E7F41F7F77B061BA063D540 /* Release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Config/Release.xcconfig; sourceTree = "<group>"; };
+		804B87C416C31DB15B71B7FD /* LoginView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LoginView.swift; path = ServEaseApp/Features/Auth/LoginFlow/LoginView.swift; sourceTree = "<group>"; };
+		839D3FF123C032B450F2E9C7 /* FaqDetailViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FaqDetailViewModel.swift; path = ServEaseApp/Features/HelpCenter/FaqDetailViewModel.swift; sourceTree = "<group>"; };
+		8520AC776DB4E63117112A54 /* AuthRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AuthRepository.swift; path = ServEaseApp/Services/Repositories/AuthRepository.swift; sourceTree = "<group>"; };
+		8B59681A36F7A02CE7D2FB4E /* HealthRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HealthRepository.swift; path = ServEaseApp/Services/Repositories/HealthRepository.swift; sourceTree = "<group>"; };
+		8DF641E42B8B73224B3238A1 /* NotificationRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NotificationRepository.swift; path = ServEaseApp/Services/Repositories/NotificationRepository.swift; sourceTree = "<group>"; };
+		8ECC0D04921ECB8E2CFE746F /* TicketRootView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TicketRootView.swift; path = ServEaseApp/Features/Tickets/TicketRootView.swift; sourceTree = "<group>"; };
+		90115B99D29C1E9CDB4C4164 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = ServEaseApp/Resources/Info.plist; sourceTree = "<group>"; };
+		968B536079F0159BC3B24CCA /* Pods_ServEaseApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ServEaseApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9730484883A51CD4DF303B0F /* LoginViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LoginViewModel.swift; path = ServEaseApp/Features/Auth/LoginFlow/LoginViewModel.swift; sourceTree = "<group>"; };
+		9A2FD99BF6C76A9028384BBB /* ServEaseApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ServEaseApp.swift; path = ServEaseApp/App/ServEaseApp.swift; sourceTree = "<group>"; };
+		9B017078E3D451BBCFAEE008 /* PrimaryButtonStyle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PrimaryButtonStyle.swift; path = ServEaseApp/Core/DesignSystem/PrimaryButtonStyle.swift; sourceTree = "<group>"; };
+		9C748DA491E2E1765AD6B53D /* CreateTicketViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CreateTicketViewModel.swift; path = ServEaseApp/Features/Tickets/CreateTicketViewModel.swift; sourceTree = "<group>"; };
+		A0F1A9BBEA69DD4E4FE0C68F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = "<group>"; };
+		A2E7C25B6B415DABA70E22B1 /* EnvironmentConfig.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = EnvironmentConfig.swift; path = ServEaseApp/Core/Config/EnvironmentConfig.swift; sourceTree = "<group>"; };
+		AB51DE7E18489062E87FDFCD /* ProfileView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProfileView.swift; path = ServEaseApp/Features/Profile/ProfileView.swift; sourceTree = "<group>"; };
+		AC676EA38C213CCE0018B118 /* AppContainer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppContainer.swift; path = ServEaseApp/App/AppContainer.swift; sourceTree = "<group>"; };
+		AF122211CAD608254E9EE1B9 /* SessionViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SessionViewModel.swift; path = ServEaseApp/Features/Auth/SessionViewModel.swift; sourceTree = "<group>"; };
+		AF21D43F50100BAC0DFFA0E6 /* ServEaseApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ServEaseApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF5D784FB922A34FD7E54A88 /* PrivacyPolicyView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PrivacyPolicyView.swift; path = ServEaseApp/Features/Profile/Legal/PrivacyPolicyView.swift; sourceTree = "<group>"; };
+		C01DC17D10B4CE4F542649C8 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = "<group>"; };
+		C67A84B58808FFC6516C3960 /* TicketDetailView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TicketDetailView.swift; path = ServEaseApp/Features/Tickets/TicketDetailView.swift; sourceTree = "<group>"; };
+		CBA284C10F8D22A22386406C /* AppPalette.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppPalette.swift; path = ServEaseApp/Core/DesignSystem/AppPalette.swift; sourceTree = "<group>"; };
+		D95D69CCDF60F98993927DCE /* HelpCenterRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HelpCenterRepository.swift; path = ServEaseApp/Services/Repositories/HelpCenterRepository.swift; sourceTree = "<group>"; };
+		DC9A91881403EE958611C1F3 /* ProfileViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProfileViewModel.swift; path = ServEaseApp/Features/Profile/ProfileViewModel.swift; sourceTree = "<group>"; };
+		E27F2F840A0E6FEB929E9DC7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = "<group>"; };
+		E6623CEF46890E4FE3A5C09B /* Pods-ServEaseApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ServEaseApp.debug.xcconfig"; path = "Target Support Files/Pods-ServEaseApp/Pods-ServEaseApp.debug.xcconfig"; sourceTree = "<group>"; };
+		E8D7F9F102D10756F3B92CE6 /* EmptyStateView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = EmptyStateView.swift; path = ServEaseApp/Core/DesignSystem/EmptyStateView.swift; sourceTree = "<group>"; };
+		ED0616323E4AA6B5E38F83BA /* SessionStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SessionStore.swift; path = ServEaseApp/Core/Storage/SessionStore.swift; sourceTree = "<group>"; };
+		EE8629CF3525C0F8FC9ED31B /* HelpCenterView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HelpCenterView.swift; path = ServEaseApp/Features/HelpCenter/HelpCenterView.swift; sourceTree = "<group>"; };
+		F453E0F2149A984CC81905CE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		F576455668CA39697DD0C4AC /* TicketListViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TicketListViewModel.swift; path = ServEaseApp/Features/Tickets/TicketListViewModel.swift; sourceTree = "<group>"; };
+		F7D4B386B752521A8312FE0A /* HomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HomeView.swift; path = ServEaseApp/Features/Home/HomeView.swift; sourceTree = "<group>"; };
+		F8C7AB57CF5B30ABC574B784 /* MainTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MainTabView.swift; path = ServEaseApp/App/MainTabView.swift; sourceTree = "<group>"; };
+		90E1893A630C4A799C41BC1B /* DebugSettings.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DebugSettings.swift; path = ServEaseApp/Core/Config/DebugSettings.swift; sourceTree = "<group>"; };
+		CA9E8683529D418D8AF39030 /* APILogger.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = APILogger.swift; path = ServEaseApp/Core/Network/APILogger.swift; sourceTree = "<group>"; };
+		EC082486EB18466DB1263F2C /* APIDebugViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = APIDebugViewModel.swift; path = ServEaseApp/Features/Profile/Debug/APIDebugViewModel.swift; sourceTree = "<group>"; };
+		E95087B4C5774386AA5A1CAE /* APIDebugView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = APIDebugView.swift; path = ServEaseApp/Features/Profile/Debug/APIDebugView.swift; sourceTree = "<group>"; };
+		B0F46B25A7EA4866A61A6F0C /* Config.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Config.plist; path = ServEaseApp/Resources/Config.plist; sourceTree = "<group>"; };
+		1291B30F77E94589A1A3DD97 /* ServEaseApp.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; name = ServEaseApp.entitlements; path = ServEaseApp/Resources/ServEaseApp.entitlements; sourceTree = "<group>"; };
+		279E6E2E400B441EBF5410A7 /* ChatView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ChatView.swift; path = ServEaseApp/Features/HelpCenter/Chat/ChatView.swift; sourceTree = "<group>"; };
+		91552E7011C34028A592AA04 /* ChatViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ChatViewModel.swift; path = ServEaseApp/Features/HelpCenter/Chat/ChatViewModel.swift; sourceTree = "<group>"; };
+		92DBD6B9DC5F459E965293D4 /* ChatRepository.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ChatRepository.swift; path = ServEaseApp/Services/Repositories/ChatRepository.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7CFB8D14BEFD72E6E5898723 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1A2BE92A716018BF5E234D91 /* Foundation.framework in Frameworks */,
+				D43BB4956874CB34236F825E /* SwiftUI.framework in Frameworks */,
+				18F7F76BF0272815C0333406 /* Foundation.framework in Frameworks */,
+				E8F4E6DE9AF11F4A3AC7A02A /* Security.framework in Frameworks */,
+				D1F56823E67A33F1640679FA /* Pods_ServEaseApp.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		450CC976701CB67B13172505 /* ServEaseApp */ = {
+			isa = PBXGroup;
+			children = (
+				AC676EA38C213CCE0018B118 /* AppContainer.swift */,
+				2F89A38172BA8D49FC1F234C /* AppContext.swift */,
+				F8C7AB57CF5B30ABC574B784 /* MainTabView.swift */,
+				9A2FD99BF6C76A9028384BBB /* ServEaseApp.swift */,
+				2591FCA65D8E40F9B24F8B03 /* AppSettings.swift */,
+				A2E7C25B6B415DABA70E22B1 /* EnvironmentConfig.swift */,
+				CBA284C10F8D22A22386406C /* AppPalette.swift */,
+				E8D7F9F102D10756F3B92CE6 /* EmptyStateView.swift */,
+				0D124770A953885F6705C57A /* PillTag.swift */,
+				9B017078E3D451BBCFAEE008 /* PrimaryButtonStyle.swift */,
+				195A5AA918755945C4C2ECD3 /* SectionHeader.swift */,
+				22D53D33DF3F0BE57504827F /* SurfaceCard.swift */,
+				12A368B4660DA046BB8BA51B /* AppModels.swift */,
+				0D6355277711DFD60BEAD4D2 /* APIClient.swift */,
+				ED0616323E4AA6B5E38F83BA /* SessionStore.swift */,
+				7DFFCFA60C3A2D1636320AC9 /* TokenStore.swift */,
+				A1B2C3D4E5F6A7B8C9D0E1F2 /* KVStore.swift */,
+				804B87C416C31DB15B71B7FD /* LoginView.swift */,
+				9730484883A51CD4DF303B0F /* LoginViewModel.swift */,
+				AF122211CAD608254E9EE1B9 /* SessionViewModel.swift */,
+				6E95A0005E523964B4C5A555 /* FaqDetailView.swift */,
+				839D3FF123C032B450F2E9C7 /* FaqDetailViewModel.swift */,
+				EE8629CF3525C0F8FC9ED31B /* HelpCenterView.swift */,
+				6A17C2B4A9EE0ED096DCE9A8 /* HelpCenterViewModel.swift */,
+				279E6E2E400B441EBF5410A7 /* ChatView.swift */,
+				91552E7011C34028A592AA04 /* ChatViewModel.swift */,
+				2CB19B096798DE1416BC8DBD /* AccountCheckCard.swift */,
+				3CEFE38A7D87580E5637405E /* BannerCard.swift */,
+				43FF4B6ED03BDB188BE98720 /* SecurityMaintenanceCard.swift */,
+				F7D4B386B752521A8312FE0A /* HomeView.swift */,
+				7DAC15484DBD90345407096F /* HomeViewModel.swift */,
+				BF5D784FB922A34FD7E54A88 /* PrivacyPolicyView.swift */,
+				136C09FB7F8D361A1CFE73EB /* UserAgreementView.swift */,
+				49CC6C4300B917B4662A097C /* NotificationsView.swift */,
+				AB51DE7E18489062E87FDFCD /* ProfileView.swift */,
+				DC9A91881403EE958611C1F3 /* ProfileViewModel.swift */,
+				2B5887E8380FCA8477967916 /* LanguageSettingsView.swift */,
+				3E50D7C93FD6F1E15D4FFDBA /* TicketListView.swift */,
+				F576455668CA39697DD0C4AC /* TicketListViewModel.swift */,
+				8ECC0D04921ECB8E2CFE746F /* TicketRootView.swift */,
+				02A42DBD92642EFDF59BE4AB /* AccountCheckRepository.swift */,
+				8520AC776DB4E63117112A54 /* AuthRepository.swift */,
+				8B59681A36F7A02CE7D2FB4E /* HealthRepository.swift */,
+				D95D69CCDF60F98993927DCE /* HelpCenterRepository.swift */,
+				8DF641E42B8B73224B3238A1 /* NotificationRepository.swift */,
+				7ACB976203D062FA30EB4246 /* TicketRepository.swift */,
+				92DBD6B9DC5F459E965293D4 /* ChatRepository.swift */,
+				4B833F4C6D8AAFEF26B083D2 /* Resources */,
+				3EFB2F3E0C9BF85E79453991 /* AppRouter.swift */,
+				37A135977C1B0D280499A5F5 /* CreateTicketView.swift */,
+				9C748DA491E2E1765AD6B53D /* CreateTicketViewModel.swift */,
+				C67A84B58808FFC6516C3960 /* TicketDetailView.swift */,
+				34536390124BCF9C21844E9F /* TicketDetailViewModel.swift */,
+				622A8F05C5036CDA0F543646 /* LoadingStateView.swift */,
+				B2C3D4E5F6A7B8C9D0E1F2A3 /* ToastView.swift */,
+				C3D4E5F6A7B8C9D0E1F2A3B4 /* BottomSheetView.swift */,
+				D4E5F6A7B8C9D0E1F2A3B4C5 /* RemoteImage.swift */,
+				E5F6A7B8C9D0E1F2A3B4C5D6 /* LottieAnimation.swift */,
+				F6A7B8C9D0E1F2A3B4C5D6E7 /* AppFont.swift */,
+				A7B8C9D0E1F2A3B4C5D6E7F8 /* AppIcon.swift */,
+				B9C0D1E2F3A4B5C6D7E8F9A1 /* ShimmerModifier.swift */,
+				C0D1E2F3A4B5C6D7E8F9A1B2 /* SkeletonView.swift */,
+				D1E2F3A4B5C6D7E8F9A1B2C3 /* AnimatedGradientBackground.swift */,
+				E2F3A4B5C6D7E8F9A1B2C3D4 /* PageTransition.swift */,
+				90E1893A630C4A799C41BC1B /* DebugSettings.swift */,
+				CA9E8683529D418D8AF39030 /* APILogger.swift */,
+				EC082486EB18466DB1263F2C /* APIDebugViewModel.swift */,
+				E95087B4C5774386AA5A1CAE /* APIDebugView.swift */,
+			);
+			name = ServEaseApp;
+			sourceTree = "<group>";
+		};
+		4B833F4C6D8AAFEF26B083D2 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				90115B99D29C1E9CDB4C4164 /* Info.plist */,
+			B0F46B25A7EA4866A61A6F0C /* Config.plist */,
+			1291B30F77E94589A1A3DD97 /* ServEaseApp.entitlements */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		59AA652E4797CA2A7B60842A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AF21D43F50100BAC0DFFA0E6 /* ServEaseApp.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6C5F1B6893623E710263CC45 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				F453E0F2149A984CC81905CE /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		C63377DAF5583952A8179210 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6C5F1B6893623E710263CC45 /* iOS */,
+				C01DC17D10B4CE4F542649C8 /* SwiftUI.framework */,
+				A0F1A9BBEA69DD4E4FE0C68F /* Foundation.framework */,
+				E27F2F840A0E6FEB929E9DC7 /* Security.framework */,
+				968B536079F0159BC3B24CCA /* Pods_ServEaseApp.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EB7372DAE79B7071421198D9 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				15C71D4956B4F80F0E9A6326 /* Pods-ServEaseApp.release.xcconfig */,
+				E6623CEF46890E4FE3A5C09B /* Pods-ServEaseApp.debug.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		F99AC41B0322A5AAD2F00655 = {
+			isa = PBXGroup;
+			children = (
+				59AA652E4797CA2A7B60842A /* Products */,
+				C63377DAF5583952A8179210 /* Frameworks */,
+				7E7F41F7F77B061BA063D540 /* Release.xcconfig */,
+				1687C31E9A502E39D58D56C8 /* Debug.xcconfig */,
+				450CC976701CB67B13172505 /* ServEaseApp */,
+				EB7372DAE79B7071421198D9 /* Pods */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4B1181EDAA77A3A29DB94123 /* ServEaseApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EC6E9C203BC026696B33AB2E /* Build configuration list for PBXNativeTarget "ServEaseApp" */;
+			buildPhases = (
+				BD042FC53BDB46EC89C76C85 /* [CP] Check Pods Manifest.lock */,
+				AC50A092F3D4373196DE3AD2 /* Sources */,
+				7CFB8D14BEFD72E6E5898723 /* Frameworks */,
+				0D937B242529DAC03B86025B /* Resources */,
+				6ACA7EBDC44A2CE14D6CD964 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ServEaseApp;
+			productName = ServEaseApp;
+			productReference = AF21D43F50100BAC0DFFA0E6 /* ServEaseApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		01F370A524948A8EFF87787D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					4B1181EDAA77A3A29DB94123 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = A24AC26C257A78CC502BD354 /* Build configuration list for PBXProject "ServEaseApp" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F99AC41B0322A5AAD2F00655;
+			productRefGroup = 59AA652E4797CA2A7B60842A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4B1181EDAA77A3A29DB94123 /* ServEaseApp */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		0D937B242529DAC03B86025B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1690D72F630B4920866A86DE /* Config.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6ACA7EBDC44A2CE14D6CD964 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ServEaseApp/Pods-ServEaseApp-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/KeychainAccess/KeychainAccess.framework",
+				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
+				"${BUILT_PRODUCTS_DIR}/MMKV/MMKV.framework",
+				"${BUILT_PRODUCTS_DIR}/MMKVCore/MMKVCore.framework",
+				"${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainAccess.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MMKV.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MMKVCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Lottie.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ServEaseApp/Pods-ServEaseApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BD042FC53BDB46EC89C76C85 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ServEaseApp-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AC50A092F3D4373196DE3AD2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				424B13AF5C888A88622F8FDB /* AppContainer.swift in Sources */,
+				038C2A9FA9A8D093357CE0AC /* AppContext.swift in Sources */,
+				F76C3AE6DCF9A48F8CF2237A /* MainTabView.swift in Sources */,
+				0049E1FB1F175E63AC968E41 /* ServEaseApp.swift in Sources */,
+				A122194C9081E470F841A31D /* AppSettings.swift in Sources */,
+				2E245BC41463982060391D99 /* EnvironmentConfig.swift in Sources */,
+				2A736DB4859794171C53ADEF /* AppPalette.swift in Sources */,
+				C592EF57FF373ACF34A694BA /* EmptyStateView.swift in Sources */,
+				7FC384E64459B224CDFB396E /* PillTag.swift in Sources */,
+				24808242E40C9291BD0027FA /* PrimaryButtonStyle.swift in Sources */,
+				309753C304782D87BA4969D8 /* SectionHeader.swift in Sources */,
+				065916A6ECDF9D13630A9823 /* SurfaceCard.swift in Sources */,
+				74C925C5511E2E79A0EF6C02 /* AppModels.swift in Sources */,
+				A15E16906BEF53AF017D1041 /* APIClient.swift in Sources */,
+				3D460F677A83AD58962EAAA0 /* SessionStore.swift in Sources */,
+				7F7C07FE6E2319625A9F50E3 /* TokenStore.swift in Sources */,
+				190106D6BC7B0805B6314B34 /* LoginView.swift in Sources */,
+				5A46FCCCCDF7AEDE99B0FF4E /* LoginViewModel.swift in Sources */,
+				A4F57E1B1736B70C9C30FF1C /* SessionViewModel.swift in Sources */,
+				C29DA69B13EF0181CAB9DC04 /* FaqDetailView.swift in Sources */,
+				8EFBF40192AA4B22C3B213BC /* FaqDetailViewModel.swift in Sources */,
+				39907A4147BB7F5FBB8BE32E /* HelpCenterView.swift in Sources */,
+				90E4F644B3A91C0E6C50703D /* HelpCenterViewModel.swift in Sources */,
+				2DA9C405C36A023E377D1051 /* AccountCheckCard.swift in Sources */,
+				16B024DF8D7CB2B879B3898F /* BannerCard.swift in Sources */,
+				0BE774FA9E890482380CC492 /* SecurityMaintenanceCard.swift in Sources */,
+				75119B07D2DEAFEB2F25F55F /* HomeView.swift in Sources */,
+				45639E085FB51E0A43B13C36 /* HomeViewModel.swift in Sources */,
+				5428521C54FFF70A47AF997C /* PrivacyPolicyView.swift in Sources */,
+				59BB3D2E1ADAB3E7AF40B3C3 /* UserAgreementView.swift in Sources */,
+				F394658C5DA51781385FDF9B /* NotificationsView.swift in Sources */,
+				3E4ED415C8BDA1BC2EF8F501 /* ProfileView.swift in Sources */,
+				936C01576B4D42D5B73E312D /* ProfileViewModel.swift in Sources */,
+				14C893147F2DB7DBA067A39D /* LanguageSettingsView.swift in Sources */,
+				7C3932373A347B05E06055B4 /* TicketListView.swift in Sources */,
+				17D1F0B534B9CDF436315145 /* TicketListViewModel.swift in Sources */,
+				A67D246E30F832610A96F2E4 /* TicketRootView.swift in Sources */,
+				2ED5C494107AF3A7611F33C7 /* AccountCheckRepository.swift in Sources */,
+				A78EC237AA74F7B0C699D8C0 /* AuthRepository.swift in Sources */,
+				D2CD85345318ABB330F9DAE3 /* HealthRepository.swift in Sources */,
+				31A23C2207F59E806DF8FC28 /* HelpCenterRepository.swift in Sources */,
+				03044FCBB0CE36E2865722CF /* NotificationRepository.swift in Sources */,
+				1830CA456C9F8748BA469C4E /* TicketRepository.swift in Sources */,
+				9BDACB0F96C8C77994511BB5 /* AppRouter.swift in Sources */,
+				33C0A8396D6ADECEC18F0161 /* CreateTicketView.swift in Sources */,
+				9DA260AFCAAFB680EEB989AD /* CreateTicketViewModel.swift in Sources */,
+				708CA36F70AA3FBE1586999E /* TicketDetailView.swift in Sources */,
+				220E4DD274ECEA3972518BA3 /* TicketDetailViewModel.swift in Sources */,
+				5709C475DE6B47B3689E395C /* LoadingStateView.swift in Sources */,
+				1A2B3C4D5E6F7A8B9C0D1E2F /* KVStore.swift in Sources */,
+				2B3C4D5E6F7A8B9C0D1E2F3A /* ToastView.swift in Sources */,
+				3C4D5E6F7A8B9C0D1E2F3A4B /* BottomSheetView.swift in Sources */,
+				4D5E6F7A8B9C0D1E2F3A4B5C /* RemoteImage.swift in Sources */,
+				5E6F7A8B9C0D1E2F3A4B5C6D /* LottieAnimation.swift in Sources */,
+				6F7A8B9C0D1E2F3A4B5C6D7E /* AppFont.swift in Sources */,
+				7A8B9C0D1E2F3A4B5C6D7E8F /* AppIcon.swift in Sources */,
+				8B9C0D1E2F3A4B5C6D7E8F9A /* ShimmerModifier.swift in Sources */,
+				9C0D1E2F3A4B5C6D7E8F9A1B /* SkeletonView.swift in Sources */,
+				AD1E2F3A4B5C6D7E8F9A1B2C /* AnimatedGradientBackground.swift in Sources */,
+				BE2F3A4B5C6D7E8F9A1B2C3D /* PageTransition.swift in Sources */,
+				A4405F9426634FC28D50B432 /* DebugSettings.swift in Sources */,
+				2E0337155F8746B68A35F31A /* APILogger.swift in Sources */,
+				9EF4B4B762BC4481A8564B73 /* APIDebugViewModel.swift in Sources */,
+				7EE167A0879540F098D50185 /* APIDebugView.swift in Sources */,
+				A3B44886F47C454A9FF9718E /* ChatView.swift in Sources */,
+				FABE0ED62A7B4850B6A1CBFD /* ChatViewModel.swift in Sources */,
+				5A07C36F8C7A460FB985E354 /* ChatRepository.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		95F666478AA4A23CF0A2A460 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7E7F41F7F77B061BA063D540 /* Release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 92WX25MULP;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ServEaseApp/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(PRODUCT_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B5F8AC347A1D21A5A5BD9C31 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		DAF67CF0C3596FC84D85C81C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1687C31E9A502E39D58D56C8 /* Debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ServEaseApp/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(PRODUCT_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		F95D4CB40BA6741CC3AFC32B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A24AC26C257A78CC502BD354 /* Build configuration list for PBXProject "ServEaseApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F95D4CB40BA6741CC3AFC32B /* Debug */,
+				B5F8AC347A1D21A5A5BD9C31 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EC6E9C203BC026696B33AB2E /* Build configuration list for PBXNativeTarget "ServEaseApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				95F666478AA4A23CF0A2A460 /* Release */,
+				DAF67CF0C3596FC84D85C81C /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 01F370A524948A8EFF87787D /* Project object */;
+}

@@ -13,6 +13,7 @@ import { UploadsModule } from './uploads/uploads.module';
 import { AdminModule } from './admin/admin.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { LoggerModule } from './common/logger/logger.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { LoggerModule } from './common/logger/logger.module';
     AdminModule,
     NotificationsModule,
     LoggerModule,
+    ChatModule,
   ],
 })
 export class AppModule {}

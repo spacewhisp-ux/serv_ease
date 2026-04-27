@@ -5,6 +5,10 @@ import { LoginPage } from '../modules/auth/LoginPage';
 import { RequireAuth } from '../modules/auth/RequireAuth';
 import { CategoryFormPage } from '../modules/faq-categories/CategoryFormPage';
 import { CategoryListPage } from '../modules/faq-categories/CategoryListPage';
+import { ChatKeywordFormPage } from '../modules/chat-keywords/ChatKeywordFormPage';
+import { ChatKeywordListPage } from '../modules/chat-keywords/ChatKeywordListPage';
+import { ChatQuestionFormPage } from '../modules/chat-questions/ChatQuestionFormPage';
+import { ChatQuestionListPage } from '../modules/chat-questions/ChatQuestionListPage';
 import { FaqFormPage } from '../modules/faqs/FaqFormPage';
 import { FaqListPage } from '../modules/faqs/FaqListPage';
 import { LogListPage } from '../modules/logs/LogListPage';
@@ -26,6 +30,12 @@ export const router = createBrowserRouter([
           { path: '/categories', element: <CategoryListPage /> },
           { path: '/categories/new', element: <CategoryFormPage /> },
           { path: '/categories/:id/edit', element: <CategoryFormPage /> },
+          { path: '/chat-questions', element: <ChatQuestionListPage /> },
+          { path: '/chat-questions/new', element: <ChatQuestionFormPage /> },
+          { path: '/chat-questions/:id/edit', element: <ChatQuestionFormPage /> },
+          { path: '/chat-keywords', element: <ChatKeywordListPage /> },
+          { path: '/chat-keywords/new', element: <ChatKeywordFormPage /> },
+          { path: '/chat-keywords/:id/edit', element: <ChatKeywordFormPage /> },
           { path: '/tickets', element: <TicketListPage /> },
           { path: '/tickets/:id', element: <TicketDetailPage /> },
           { path: '/logs', element: <LogListPage /> },

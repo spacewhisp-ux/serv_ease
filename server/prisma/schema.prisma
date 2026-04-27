@@ -250,6 +250,34 @@ model PushDevice {
   @@map("push_devices")
 }
 
+model ChatQuestion {
+  id        String   @id @default(uuid()) @db.Uuid
+  text      String   @db.VarChar(255)
+  reply     String   @db.Text
+  linkUrl   String?  @map("link_url") @db.Text
+  linkLabel String?  @map("link_label") @db.VarChar(120)
+  sortOrder Int      @default(0) @map("sort_order")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([isActive, sortOrder])
+  @@map("chat_questions")
+}
+
+model ChatKeyword {
+  id        String   @id @default(uuid()) @db.Uuid
+  keyword   String   @unique @db.VarChar(120)
+  reply     String   @db.Text
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([isActive])
+  @@index([keyword])
+  @@map("chat_keywords")
+}
+
 model TicketHistory {
   id         String                 @id @default(uuid()) @db.Uuid
   ticketId   String                 @map("ticket_id") @db.Uuid

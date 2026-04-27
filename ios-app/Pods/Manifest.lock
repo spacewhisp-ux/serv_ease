@@ -1,0 +1,32 @@
+PODS:
+  - KeychainAccess (4.2.2)
+  - Kingfisher (7.12.0)
+  - lottie-ios (4.6.0)
+  - MMKV (2.4.0):
+    - MMKVCore (~> 2.4.0)
+  - MMKVCore (2.4.0)
+
+DEPENDENCIES:
+  - KeychainAccess (~> 4.2)
+  - Kingfisher (~> 7.0)
+  - lottie-ios (~> 4.5)
+  - MMKV (~> 2.0)
+
+SPEC REPOS:
+  trunk:
+    - KeychainAccess
+    - Kingfisher
+    - lottie-ios
+    - MMKV
+    - MMKVCore
+
+SPEC CHECKSUMS:
+  KeychainAccess: c0c4f7f38f6fc7bbe58f5702e25f7bd2f65abf51
+  Kingfisher: 53a10ea35051a436b5fb626ca2dd8f3144d755e9
+  lottie-ios: 8f959969761e9c45d70353667d00af0e5b9cadb3
+  MMKV: 86859fdfa2b0b21db1fd6e48788474a6416a2c77
+  MMKVCore: 3d16ce9f7d411e135020915fde98a056859a1efa
+
+PODFILE CHECKSUM: 4546999a1261af5bdd0603ae368010baa016cc4c
+
+COCOAPODS: 1.15.2
